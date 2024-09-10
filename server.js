@@ -22,8 +22,7 @@ export const setupServer = () => {
 
   app.get('/', (req, res) =>
     res.send(
-      // `Hello! It is Wordisstuff home work.  Click <a href="${tps.domain}${authDb.port}/api-docs/"> Api Docs </a>`,
-      `Hello! It is aquatracker server.  Click <a href="!!!/api-docs/"> Api Docs </a>`,
+      `Hello! It is Aqua Tracker server!  Click <a href="!!!/api-docs/"> Api Docs </a>`,
     ),
   );
   app.use(Router);
