@@ -1,0 +1,49 @@
+openapi: 3.1.0
+info:
+    version: 1.0.0
+    title: Contacts
+    license:
+        name: Apache 2.0
+        url: http://www.apache.org/licenses/LICENSE-2.0.html
+    description: This is a documentation for Contacts app
+tags:
+    - name: Contacts
+      description: Contact operations
+    - name: Auth
+      description: Auth operations
+servers:
+    - url: https://nodejs-hw-mongodb-yg1c.onrender.com
+    - url: http://localhost:8080
+paths:
+    /auth/register:
+        post:
+            $ref: ../swagger/paths/users/register.yaml
+    /auth/login:
+        post:
+            $ref: ../swagger/paths/users/login.yaml
+    /auth/logout:
+        post:
+            $ref: ../swagger/paths/users/logout.yaml
+    /auth/refresh:
+        post:
+            $ref: ../swagger/paths/users/refresh.yaml
+    /auth/send-reset-email:
+        post:
+            $ref: ../swagger/paths/users/sendResetEmail.yaml
+    /contacts/{id}:
+        get:
+            $ref: ../swagger/paths/contacts/{id}/get.yaml
+        patch:
+            $ref: ../swagger/paths/contacts/{id}/patch.yaml
+        delete:
+            $ref: ../swagger/paths/contacts/{id}/delete.yaml
+    /contacts:
+        get:
+            $ref: ../swagger/paths/contacts/get.yaml
+        post:
+            $ref: ../swagger/paths/contacts/post.yaml
+components:
+    securitySchemes:
+        bearerAuth:
+            type: http
+            scheme: bearer
