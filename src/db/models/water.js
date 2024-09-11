@@ -2,11 +2,11 @@
 import {Schema,model} from 'mongoose'
 
 const aquaSchema = new Schema({
+userId:{type: Schema.Types.ObjectId, ref: 'users'},
 date:{type: String, required:true},
 norm:{type: Number, required:true},
 amount:{type: Number, required:true},
 percentOf:{type:Number},
-userId:{type: Schema.Types.ObjectId, ref: 'users'}
 },{
         timestamps:false,
         versionKey:false
