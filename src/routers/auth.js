@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import validateBody from '../middlewares/validateBody.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
-import { registerUserSchema } from '../validation/auth.js';
-import { registerUserController } from '../controllers/auth.js';
+import { registerUserSchema, loginUserSchema } from '../validation/auth.js';
+import { registerUserController, loginUserController } from '../controllers/auth.js';
 import { jsonParser } from '../constants/constants.js';
 
 const router = Router();
@@ -15,6 +15,13 @@ router.post(
 );
 
 //login code
+
+router.post(
+    '/signin',
+    jsonParser,
+    validateBody(loginUserSchema),
+    ctrlWrapper(loginUserController),
+);
 
 //logout code
 

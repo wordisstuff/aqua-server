@@ -1,5 +1,5 @@
 import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/index.js';
-import { Sessions } from '../db/models/session.js';
+import Sessions  from '../db/models/session.js';
 import randomToken from './randomToken.js';
 
 const createSession = async user => {

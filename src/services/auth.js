@@ -3,10 +3,12 @@ import jwt from 'jsonwebtoken';
 import createHttpError from 'http-errors';
 import User from '../db/models/user.js';
 import { smtp } from '../constants/index.js';
+import Sessions from '../db/models/session.js';
+import createSession from '../utils/createSession.js';
 
 export const findUserByEmail = email => User.findOne({ email });
 export const findUserById = id => User.findById(id);
-export const updateUserWithToket = id => {
+export const updateUserWithToken = id => {
     const token = jwt.sign({ id }, smtp.jwtSecret);
     return User.findByIdAndUpdate(id, { token }, { new: true });
 };
@@ -21,14 +23,35 @@ export const registerUser = async userData => {
         ...userData,
         password: hashedPassword,
     });
-    return updateUserWithToket(newUser._id);
+    return updateUserWithToken(newUser._id);
 };
 
 //login code
 
+export const loginUser = async data => {
+
+    console.log("DATA", data);
+
+    const user = await findUserByEmail(data.email);
+
+    if (!user) throw createHttpError(404, 'User not found');
+
+    console.log(user);
+
+    const isEqual = await bcrypt.compare(data.password, user.password);
+    if (!isEqual) throw createHttpError(401, 'Unauthorized');
+
+    await Sessions.deleteOne({ userId: user._id });
+
+    const newSession = await createSession({ userId: user._id });
+    return await Sessions.create(newSession);
+
+
+};
+
 //logout code
 
-//refresh sesion code
+//refresh session code
 
 //update user code
 
