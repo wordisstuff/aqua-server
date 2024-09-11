@@ -8,7 +8,7 @@ import { notFindeMiddleware } from './middlewares/notFindeMiddleware.js';
 import Router from './routers/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import cookieParser from 'cookie-parser';
-import swaggerDocs from './middlewares/swaggerDocs.js';
+// import swaggerDocs from './middlewares/swaggerDocs.js';
 
 export const setupServer = () => {
   const app = express();
@@ -22,7 +22,7 @@ export const setupServer = () => {
 
   app.get('/', (req, res) =>
     res.send(
-      `Hello! It is Aqua Tracker server!  Click <a href="!!!/api-docs/"> Api Docs </a>`,
+      `<div style="display: flex; justify-content: center; align-items: center; height: 100vh;"> Hello! It is Aqua Tracker server!  Click <a href="!!!/api-docs/"> Api Docs </a></div>`,
     ),
   );
   app.use(Router);
