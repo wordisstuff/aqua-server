@@ -8,6 +8,7 @@ import { notFindeMiddleware } from './middlewares/notFindeMiddleware.js';
 import Router from './routers/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import cookieParser from 'cookie-parser';
+import helloMark from './utils/helloMark.js';
 // import swaggerDocs from './middlewares/swaggerDocs.js';
 
 export const setupServer = () => {
@@ -20,7 +21,7 @@ export const setupServer = () => {
     //   app.use('/api-docs', swaggerDocs());
     //   app.use('/uploads', express.static(UPLOAD_DIR));
 
-    app.get('/', (req, res) => res.send(``));
+    app.get('/', (req, res) => res.send(helloMark()));
     app.use(Router);
 
     app.use(notFindeMiddleware);

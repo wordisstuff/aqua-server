@@ -8,6 +8,7 @@ export const pinoSettings = {
 };
 
 export const jsonParser = express.json();
+export const serverDeployLink = 'https://aqua-server-83k1.onrender.com';
 
 export const schemaObjectString = { type: String, required: true };
 
