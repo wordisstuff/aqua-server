@@ -1,14 +1,14 @@
 import { Router } from 'express';
 import validateBody from '../middlewares/validateBody.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
-import {registerUserSchema} from '../validation/auth.js';
-import {registerUserController} from '../controllers/auth.js';
+import { registerUserSchema } from '../validation/auth.js';
+import { registerUserController } from '../controllers/auth.js';
 import { jsonParser } from '../constants/constants.js';
 
 const router = Router();
 
 router.post(
-    '/register',
+    '/signup',
     jsonParser,
     validateBody(registerUserSchema),
     ctrlWrapper(registerUserController),
@@ -29,6 +29,5 @@ router.post(
 //google auth code
 
 //confirm google auth code
-
 
 export default router;
