@@ -13,3 +13,19 @@ export const registerUser = async (payload) => {
     password: cryptedPassword,
   });
 };
+
+//login code
+
+//logout code
+
+//refresh sesion code
+
+//update user code
+
+//reset-token code
+
+//reset password code
+
+//google login&signup code
+
+

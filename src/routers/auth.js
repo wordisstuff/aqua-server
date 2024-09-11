@@ -20,7 +20,9 @@ router.post(
 
 //refresh code
 
-//reset-email code
+//update user code
+
+//reset-token code
 
 //reset password code
 

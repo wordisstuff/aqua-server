@@ -10,3 +10,20 @@ export const registerUserController = async (req, res) => {
     data: user,
   });
 };
+
+//login code
+
+//logout code
+
+//refresh code
+
+//update user code
+
+//reset-token code
+
+//reset password code
+
+//google auth code
+
+//confirm google auth code
+
