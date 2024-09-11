@@ -1,19 +1,27 @@
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import createHttpError from 'http-errors';
 import User from '../db/models/user.js';
+import { smtp } from '../constants/index.js';
 
 export const findUserByEmail = email => User.findOne({ email });
 export const findUserById = id => User.findById(id);
-export const registerUser = async payload => {
-    const user = await User.findOne({ email: payload.email });
+export const updateUserWithToket = id => {
+    const token = jwt.sign({ id }, smtp.jwtSecret);
+    return User.findByIdAndUpdate(id, { token }, { new: true });
+};
+
+export const registerUser = async userData => {
+    const user = await findUserByEmail(userData.email);
     if (user) throw createHttpError(409, 'Email in use!');
 
-    const cryptedPassword = await bcrypt.hash(payload.password, 10);
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
 
-    return await User.create({
-        ...payload,
-        password: cryptedPassword,
+    const newUser = await User.create({
+        ...userData,
+        password: hashedPassword,
     });
+    return updateUserWithToket(newUser._id);
 };
 
 //login code

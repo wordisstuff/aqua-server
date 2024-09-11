@@ -1,4 +1,4 @@
-import {Router} from 'express';
+import { Router } from 'express';
 import validateBody from '../middlewares/validateBody.js';
 import { createWaterSchema } from '../validation/water.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
@@ -6,11 +6,11 @@ import { createWaterController } from '../controllers/water.js';
 
 const waterRouter = Router();
 
-
-waterRouter.post('/',
+waterRouter.post(
+    '/',
     validateBody(createWaterSchema),
-    ctrlWrapper(createWaterController)
-)
+    ctrlWrapper(createWaterController),
+);
 
 // get water by id code
 
