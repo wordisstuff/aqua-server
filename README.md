@@ -4,7 +4,7 @@ https://github.com/users/wordisstuff/projects/1/views/1?layout=board
 
 •	@wordisstuff- Hennadii Moholivets
 
-•	@Olena457 - Олена Demianenko
+•	@Olena457 - Olena Demianenko
 
 •	@RadchenkoArtem2023 - Artem Radchenko
 
@@ -23,3 +23,5 @@ https://github.com/users/wordisstuff/projects/1/views/1?layout=board
 •	@12DaNa21 - Bogdana Popovych 
 
 • @maklarus - Mykhailo Khariuk
+
+• @Nickylood - Mykola Prytkov
