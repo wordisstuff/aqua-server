@@ -3,7 +3,7 @@ import cors from 'cors';
 import pino from 'pino-http';
 import { pinoSettings } from './constants/constants.js';
 import { authDb } from './constants/index.js';
-import { notFindeMiddleware } from './middlewares/notFindeMiddleware.js';
+import { notFindMiddleware } from './middlewares/notFindMiddleware.js';
 
 import Router from './routers/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
@@ -24,7 +24,7 @@ export const setupServer = () => {
     app.get('/', (req, res) => res.send(helloMark()));
     app.use(Router);
 
-    app.use(notFindeMiddleware);
+    app.use(notFindMiddleware);
     app.use(errorHandler);
 
     const PORT = authDb.port;

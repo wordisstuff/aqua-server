@@ -33,9 +33,17 @@ export const loginUser = async data => {
 
     const newSession = await createSession({ userId: user._id });
     return await Sessions.create(newSession);
+
+
 };
 
 //logout code
+
+export const logoutUser = (sessionId) => {
+    return Sessions.deleteOne({ _id: sessionId });
+};
+
+
 
 //refresh session code
 
