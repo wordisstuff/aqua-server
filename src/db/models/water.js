@@ -2,11 +2,9 @@ import { Schema, model } from 'mongoose';
 
 const aquaSchema = new Schema(
     {
-        date: { type: String, required: true },
-        norm: { type: Number, required: true },
+        date: { type: Date, required: true },
         amount: { type: Number, required: true },
-        percent: { type: Number },
-        userId: { type: Schema.Types.ObjectId, ref: 'users' },
+        userId: { type: Schema.Types.ObjectId, ref: 'users', required: true },
     },
     {
         timestamps: false,

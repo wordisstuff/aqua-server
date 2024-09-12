@@ -1,13 +1,6 @@
 import Water from '../db/models/water.js';
 
-export const createWater = async aqua => {
-    console.log('Aqua', aqua);
-
-    const percent = Number((aqua.amount / (aqua.norm * 1000)) * 100).toFixed(2);
-
-    const water = await Water.create({ ...aqua, percent });
-    return water;
-};
+export const createWater = async aqua => await Water.create(aqua);
 
 // get water by id code
 

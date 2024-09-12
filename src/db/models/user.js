@@ -5,7 +5,6 @@ const userSchema = new Schema(
         name: { type: String, default: 'User' },
         email: { type: String, unique: true, required: true },
         password: { type: String, required: true },
-        token: { type: String, default: null },
         gender: { type: String, enum: ['female', 'male'], default: 'female' },
         photo: { type: String, default: null },
         weight: { type: Number, default: 0 },

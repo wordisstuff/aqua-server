@@ -1,9 +1,11 @@
 import Joi from 'joi';
 
 export const createWaterSchema = Joi.object({
-    date: Joi.string().required(),
-    amount: Joi.number().integer().required(),
-    norm: Joi.number(),
+    userId: Joi.string(),
+    date: Joi.date().optional(),
+    amount: Joi.number().required(),
+    minutes: Joi.number().integer().min(0).max(59).optional(),
+    hours: Joi.number().integer().min(0).max(23).optional(),
 });
 
 // update Aqua schema code
