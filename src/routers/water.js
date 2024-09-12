@@ -1,29 +1,25 @@
-import { Router } from 'express';
-import validateBody from '../middlewares/validateBody.js';
-import { createWaterSchema } from '../validation/water.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
-import { createWaterController } from '../controllers/water.js';
 import { jsonParser } from '../constants/constants.js';
 
-const waterRouter = Router();
+import express from 'express';
+import {
+    addWaterRecord,
+    updateWaterRecord,
+    deleteWaterRecord,
+    getDailyWaterRecord,
+    getMonthlyWaterRecord,
+} from '../controllers/water.js';
 
-waterRouter.post(
-    '/',
+const waterRouter = express.Router();
+
+waterRouter.post('/', jsonParser, ctrlWrapper(addWaterRecord));
+waterRouter.put('/:id', jsonParser, ctrlWrapper(updateWaterRecord));
+waterRouter.delete('/:id', jsonParser, ctrlWrapper(deleteWaterRecord));
+waterRouter.get('/daily/:date', jsonParser, ctrlWrapper(getDailyWaterRecord));
+waterRouter.get(
+    '/monthly/:year/:month',
     jsonParser,
-    validateBody(createWaterSchema),
-    ctrlWrapper(createWaterController),
+    ctrlWrapper(getMonthlyWaterRecord),
 );
 
-// get water by id code
-
-// update water code
-
-// delete water code
-
-// get water date codes
-// day code
-
-// week code
-
-// month code
 export default waterRouter;

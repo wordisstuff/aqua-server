@@ -15,3 +15,5 @@ export const errorHandler = (error, req, res, next) => {
         data: { message: error.message },
     });
 };
+
+export default errorHandler;
