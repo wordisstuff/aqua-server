@@ -22,4 +22,4 @@ https://github.com/users/wordisstuff/projects/1/views/1?layout=board
 
 •	@12DaNa21 - Bogdana Popovych 
 
-• @maklarus · he/him - Mykhailo Khariuk
+• @maklarus - Mykhailo Khariuk
