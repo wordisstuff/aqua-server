@@ -2,13 +2,13 @@
   "name": "aqua-server",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "prettier": "prettier --write .",
     "lint": "eslint src/**/*.js",
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
+    "start": "node ./src/index.js",
+    "dev": "nodemon ./src/index.js",
     "build": "npm run build-docs",
     "build-docs": "redocly bundle --ext json -o docs/swagger.json",
     "preview-docs": "redocly preview-docs"
