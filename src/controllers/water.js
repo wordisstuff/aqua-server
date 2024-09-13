@@ -2,14 +2,8 @@ import { nanoid } from 'nanoid';
 import moment from 'moment-timezone';
 import mongoose from 'mongoose';
 import WaterRecord from '../db/models/water.js';
-//import { User } from '../db/models/user.js';
+import User from '../db/models/user.js';
 import errorHandler from '../middlewares/errorHandler.js';
-import {
-    addWaterRecordSchema,
-    dateSchema,
-    monthYearSchema,
-    updateWaterRecordSchema,
-} from '../validation/water.js';
 import { format, startOfDay, endOfDay } from 'date-fns';
 
 export const addWaterRecord = async (req, res, next) => {
@@ -24,9 +18,6 @@ export const addWaterRecord = async (req, res, next) => {
     });
 
     const record = { amount, date: recordDate, owner };
-
-    const { error } = addWaterRecordSchema.validate(record);
-    if (error) return next(errorHandler(400, error.message));
 
     try {
         const newWaterRecord = await WaterRecord.create(record);
@@ -50,8 +41,6 @@ export const updateWaterRecord = async (req, res, next) => {
     });
 
     const updatedData = { amount, date: recordDate };
-    const { error } = updateWaterRecordSchema.validate(updatedData);
-    if (error) return next(errorHandler(400, error.message));
 
     try {
         const updatedRecord = await WaterRecord.findByIdAndUpdate(
@@ -97,13 +86,9 @@ export const getDailyWaterRecord = async (req, res, next) => {
     const { date } = req.params;
     const userId = req.user._id;
 
-    const { error } = dateSchema.validate(req.params);
-    if (error) return next(errorHandler(400, error.message));
-
     const user = await User.findById(userId);
     if (!user) return next(errorHandler(404, 'User not found'));
 
-    const userTimezone = req.headers['timezone'] || 'UTC';
     const dateObject = new Date(date);
     const startOfDayDate = startOfDay(dateObject);
     const endOfDayDate = endOfDay(dateObject);
