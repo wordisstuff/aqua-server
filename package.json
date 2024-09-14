@@ -1,11 +1,11 @@
 {
-  "name": "hw-node102-mongodb",
+  "name": "aqua-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "pretier": "pretier",
+    "prettier": "prettier --write .",
     "lint": "eslint src/**/*.js",
     "start": "node ./src/index.js",
     "dev": "nodemon ./src/index.js",
