@@ -1,8 +1,13 @@
-import { nanoid } from 'nanoid';
 import moment from 'moment-timezone';
-import mongoose from 'mongoose';
-import WaterRecord from '../db/models/water.js';
-import User from '../db/models/user.js';
+import {
+    createWaterRecord,
+    updateWaterRecordById,
+    deleteWaterRecordById,
+    findWaterRecordById,
+    findDailyWaterRecords,
+    findMonthlyWaterRecords,
+    findUserById,
+} from '../services/water.js';
 import errorHandler from '../middlewares/errorHandler.js';
 import { format, startOfDay, endOfDay } from 'date-fns';
 
@@ -11,7 +16,6 @@ export const addWaterRecord = async (req, res, next) => {
     const owner = req.user.id;
 
     let recordDate = date ? new Date(date) : new Date();
-
     const userTimezone = req.headers['timezone'] || 'UTC';
     recordDate = format(recordDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx", {
         timeZone: userTimezone,
@@ -20,7 +24,7 @@ export const addWaterRecord = async (req, res, next) => {
     const record = { amount, date: recordDate, owner };
 
     try {
-        const newWaterRecord = await WaterRecord.create(record);
+        const newWaterRecord = await createWaterRecord(record);
         res.status(201).send({
             newWaterRecord,
             message: 'Water record successfully added',
@@ -43,11 +47,7 @@ export const updateWaterRecord = async (req, res, next) => {
     const updatedData = { amount, date: recordDate };
 
     try {
-        const updatedRecord = await WaterRecord.findByIdAndUpdate(
-            id,
-            updatedData,
-            { new: true },
-        );
+        const updatedRecord = await updateWaterRecordById(id, updatedData);
         if (!updatedRecord) throw errorHandler(404, 'Water record not found');
 
         res.json({
@@ -62,17 +62,14 @@ export const updateWaterRecord = async (req, res, next) => {
 export const deleteWaterRecord = async (req, res, next) => {
     const { id } = req.params;
 
-    if (!mongoose.Types.ObjectId.isValid(id))
-        return next(errorHandler(400, 'Invalid ID format'));
-
     try {
-        const record = await WaterRecord.findById(id);
+        const record = await findWaterRecordById(id);
         if (!record) return next(errorHandler(404));
 
         if (record.owner.toString() !== req.user.id)
             return next(errorHandler(403, 'Access denied'));
 
-        const deletedRecord = await WaterRecord.findByIdAndDelete(id);
+        const deletedRecord = await deleteWaterRecordById(id);
         res.status(200).send({
             deletedRecord,
             message: 'Water record successfully deleted',
@@ -86,7 +83,7 @@ export const getDailyWaterRecord = async (req, res, next) => {
     const { date } = req.params;
     const userId = req.user._id;
 
-    const user = await User.findById(userId);
+    const user = await findUserById(userId);
     if (!user) return next(errorHandler(404, 'User not found'));
 
     const dateObject = new Date(date);
@@ -94,11 +91,11 @@ export const getDailyWaterRecord = async (req, res, next) => {
     const endOfDayDate = endOfDay(dateObject);
 
     try {
-        const records = await WaterRecord.find({
-            owner: userId,
-            date: { $gte: startOfDayDate, $lte: endOfDayDate },
-        });
-
+        const records = await findDailyWaterRecords(
+            userId,
+            startOfDayDate,
+            endOfDayDate,
+        );
         const totalAmountForDay = records
             .reduce((acc, record) => acc + record.amount, 0)
             .toFixed(2);
@@ -120,7 +117,7 @@ export const getMonthlyWaterRecord = async (req, res, next) => {
     const { year, month } = req.params;
     const userId = req.user._id;
 
-    const user = await User.findById(userId);
+    const user = await findUserById(userId);
     if (!user) return next(errorHandler(404, 'User not found'));
 
     const userTimezone = req.headers['timezone'] || 'UTC';
@@ -133,10 +130,11 @@ export const getMonthlyWaterRecord = async (req, res, next) => {
         .endOf('day');
 
     try {
-        const waterRecords = await WaterRecord.find({
-            owner: userId,
-            date: { $gte: startOfMonth.toDate(), $lte: endOfMonth.toDate() },
-        });
+        const waterRecords = await findMonthlyWaterRecords(
+            userId,
+            startOfMonth.toDate(),
+            endOfMonth.toDate(),
+        );
 
         const groupedByDay = waterRecords.reduce((acc, record) => {
             const localDate = moment
@@ -159,7 +157,6 @@ export const getMonthlyWaterRecord = async (req, res, next) => {
                     100
                 ).toFixed(2);
                 return {
-                    id: nanoid(),
                     day: formattedDate,
                     totalAmount: totalAmount.toFixed(2),
                     percentComplete,
