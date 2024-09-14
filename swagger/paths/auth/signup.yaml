@@ -1,0 +1,58 @@
+tags:
+    - Authentication
+summary: User signup
+operationId: singup
+description: 'Register a new user with their email password.'
+security:
+    - bearerAuth: []
+requestBody:
+    required: true
+    content:
+        application/json:
+            schema:
+                type: object
+                properties:
+                    email:
+                        description: 'Enter your email'
+                        type: string
+                        format: email
+                        example: johnsmit@gmail.com
+                    password:
+                        description: 'Enter your password'
+                        type: string
+                        minLength: 6
+                        example: securePassword123
+                required:
+                    - email
+                    - password
+    description: 'User details required for signup.'
+responses:
+    '201':
+        description: User registered successfully
+        content:
+            application/json:
+                schema:
+                    type: object
+                    properties:
+                        status:
+                            type: integer
+                            example: 201
+                        message:
+                            type: string
+                            example: Successfully registered the user!
+                        data:
+                            type: object
+                            properties:
+                                id:
+                                    type: string
+                                    example: 'abc123'
+                                email:
+                                    type: string
+                                    example: johnsmit@gmail.com
+
+    '409':
+        $ref: '../../components/responses/409.yaml'
+    '500':
+        $ref: '../../components/responses/500.yaml'
+    '401':
+        $ref: '../../components/responses/401.yaml'

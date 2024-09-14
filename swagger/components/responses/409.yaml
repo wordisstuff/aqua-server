@@ -1,0 +1,12 @@
+description: Conflict, email already exists.
+content:
+    application/json:
+        schema:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    example: 409
+                message:
+                    type: string
+                    example: Email already exists.
