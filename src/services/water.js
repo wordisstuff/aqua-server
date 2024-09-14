@@ -1,16 +1,44 @@
-import Water from '../db/models/water.js';
+import WaterRecord from '../db/models/water.js';
+import User from '../db/models/user.js';
 
-export const createWater = async aqua => await Water.create(aqua);
+export const createWaterRecord = async record => {
+    return await WaterRecord.create(record);
+};
 
-// get water by id code
+export const updateWaterRecordById = async (id, updatedData) => {
+    return await WaterRecord.findByIdAndUpdate(id, updatedData, { new: true });
+};
 
-// update water code
+export const deleteWaterRecordById = async id => {
+    return await WaterRecord.findByIdAndDelete(id);
+};
 
-// delete water code
+export const findWaterRecordById = async id => {
+    return await WaterRecord.findById(id);
+};
 
-// get water date codes
-// day code
+export const findDailyWaterRecords = async (
+    userId,
+    startOfDayDate,
+    endOfDayDate,
+) => {
+    return await WaterRecord.find({
+        owner: userId,
+        date: { $gte: startOfDayDate, $lte: endOfDayDate },
+    });
+};
 
-// week code
+export const findMonthlyWaterRecords = async (
+    userId,
+    startOfMonth,
+    endOfMonth,
+) => {
+    return await WaterRecord.find({
+        owner: userId,
+        date: { $gte: startOfMonth, $lte: endOfMonth },
+    });
+};
 
-// month code
+export const findUserById = async userId => {
+    return await User.findById(userId);
+};
