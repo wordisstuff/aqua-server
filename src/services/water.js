@@ -42,3 +42,15 @@ export const findMonthlyWaterRecords = async (
 export const findUserById = async userId => {
     return await User.findById(userId);
 };
+
+export const getWaterRecordById = async (userId, date) => {
+    const startOfDayDate = new Date(date.setHours(0, 0, 0, 0));
+    const endOfDayDate = new Date(date.setHours(23, 59, 59, 999));
+
+    const records = await WaterRecord.find({
+        owner: userId, // використовуємо userId для пошуку
+        date: { $gte: startOfDayDate, $lte: endOfDayDate },
+    });
+
+    return records;
+};

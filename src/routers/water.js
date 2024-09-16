@@ -15,6 +15,7 @@ import {
     deleteWaterRecord,
     getDailyWaterRecord,
     getMonthlyWaterRecord,
+    getWaterRecordByIdController,
 } from '../controllers/water.js';
 
 const waterRouter = express.Router();
@@ -49,6 +50,12 @@ waterRouter.get(
     jsonParser,
     validateBody(monthYearSchema),
     ctrlWrapper(getMonthlyWaterRecord),
+);
+waterRouter.get(
+    '/:id',
+    isValidId,
+    jsonParser,
+    ctrlWrapper(getWaterRecordByIdController),
 );
 
 export default waterRouter;

@@ -7,6 +7,7 @@ import {
     findDailyWaterRecords,
     findMonthlyWaterRecords,
     findUserById,
+    getWaterRecordById,
 } from '../services/water.js';
 import errorHandler from '../middlewares/errorHandler.js';
 import { format, startOfDay, endOfDay } from 'date-fns';
@@ -169,6 +170,31 @@ export const getMonthlyWaterRecord = async (req, res, next) => {
             .toFixed(2);
 
         res.status(200).send({ totalWaterForMonth, daysInMonth });
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const getWaterRecordByIdController = async (req, res, next) => {
+    const { id } = req.params;
+    const { date } = req.query;
+
+    const dateObject = date ? new Date(date) : new Date();
+
+    try {
+        const records = await getWaterRecordById(id, dateObject);
+        if (!records.length) {
+            return next(errorHandler(404, 'Records not found for this day'));
+        }
+
+        const totalAmountForDay = records
+            .reduce((acc, record) => acc + record.amount, 0)
+            .toFixed(2);
+
+        res.json({
+            totalAmountForDay,
+            records,
+        });
     } catch (err) {
         next(err);
     }
