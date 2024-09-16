@@ -11,6 +11,8 @@ const userSchema = new Schema(
         activeTime: { type: Number, default: 0 },
         recommendedWater: { type: Number, default: 1.5 },
         verifyByEmail: { type: Boolean, default: false },
+        token: { type: String, default: null },
+        verifyToken: { type: String, default: null },
     },
     { timestamps: true, versionKey: false },
 );

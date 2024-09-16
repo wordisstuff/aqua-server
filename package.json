@@ -46,6 +46,7 @@
     "nodemailer": "^6.9.14",
     "pino-http": "^10.2.0",
     "pino-pretty": "^11.2.2",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^10.0.0"
   }
 }

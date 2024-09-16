@@ -1,0 +1,77 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify email</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #4bf9ff18;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #080808;
+
+            font-size: 24px;
+            text-align: center;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        a {
+            color: #ffffff;
+            background-color: #ffffff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        a:hover {
+            background-color: #a1cdfb87;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #888888;
+            text-align: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Hello, {{name}}!</h1>
+        <p>We received a request to verify email. If you didn't make the request, just ignore this email.
+            Otherwise, you can verify your email using the button below.</p>
+        <p style="text-align: center;">
+            <a href="{{link}}">Verify email</a>
+        </p>
+        <p>If the button doesn't work, copy and paste the following link into your browser:</p>
+        <p>{{link}}</p>
+    </div>
+
+    <div class="footer">
+        <p>&copy; Aqua Tracker. All rights reserved.</p>
+    </div>
+</body>
+
+</html>
