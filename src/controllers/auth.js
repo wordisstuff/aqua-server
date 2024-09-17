@@ -29,8 +29,10 @@ export const verifyEmailController = async (req, res) => {
         httpOnly: true,
         expires: new Date(Date.now() + ONE_DAY),
     });
-
-    return res.redirect(`http://localhost:5173/verify/${userWithToken.token}`);
+    return res.redirect(
+        `https://aqua-front-nine.vercel.app/verify/${userWithToken.token}`,
+    );
+    // return res.redirect(`http://localhost:5173/verify/${userWithToken.token}`);
 };
 //refresh code
 export const refreshUserController = async (req, res) => {
