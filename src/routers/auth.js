@@ -7,6 +7,7 @@ import {
     loginUserController,
     logoutUserController,
     verifyEmailController,
+    refreshUserController,
 } from '../controllers/auth.js';
 import { jsonParser } from '../constants/constants.js';
 
@@ -35,7 +36,7 @@ router.post(
 router.post('/logout', ctrlWrapper(logoutUserController));
 
 //refresh code
-
+router.post('/refresh', ctrlWrapper(refreshUserController));
 //update user code
 
 //reset-token code

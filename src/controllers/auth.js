@@ -1,6 +1,4 @@
-import createHttpError from 'http-errors';
 import { ONE_DAY } from '../constants/index.js';
-import Sessions from '../db/models/session.js';
 import {
     registerUser,
     loginUser,
@@ -21,9 +19,7 @@ export const registerUserController = async (req, res) => {
 export const verifyEmailController = async (req, res) => {
     const { verifyToken } = req.params;
 
-    const { session } = await verifyEmail(verifyToken);
-
-    console.log('SESSION', session);
+    const { session, userWithToken } = await verifyEmail(verifyToken);
 
     res.cookie('refreshToken', session.refreshToken, {
         httpOnly: true,
@@ -34,16 +30,19 @@ export const verifyEmailController = async (req, res) => {
         expires: new Date(Date.now() + ONE_DAY),
     });
 
-    return res.redirect(`http://localhost:5173/signin`);
+    return res.redirect(`http://localhost:5173/verify/${userWithToken.token}`);
 };
 //refresh code
-
+export const refreshUserController = async (req, res) => {
+    const newSession = await loginUser(req.body, req.cookies);
+    res.status(201).json({
+        session: newSession,
+    });
+};
 //login code
 export const loginUserController = async (req, res) => {
-    const { sessionId, refreshToken } = req.cookies;
-    const cookies = Sessions.findOne({ _id: sessionId, refreshToken });
-    if (!cookies) throw createHttpError(401, 'Not find session!');
-    console.log('COOKIES', cookies);
+    console.log(req.body);
+
     const session = await loginUser(req.body);
 
     res.cookie('refreshToken', session.refreshToken, {
@@ -60,7 +59,7 @@ export const loginUserController = async (req, res) => {
         status: 200,
         message: 'Successfully logged in an user!',
         data: {
-            accessToken: session.accessToken,
+            token: session.accessToken,
         },
     });
 };

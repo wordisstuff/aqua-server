@@ -20,7 +20,7 @@ export const registerUser = async userData => {
     console.log('VERIFYTOKEN', verifyToken);
     const html = templateMaker({
         name: email,
-        link: `${tps.domain}${authDb.port}/auth/verify/${verifyToken}`,
+        link: `${tps.domain}/auth/verify/${verifyToken}`,
     });
 
     await sendEmail({
@@ -41,33 +41,34 @@ export const registerUser = async userData => {
 //verify code
 
 export const verifyEmail = async verifyToken => {
-    const user = await User.findOneAndUpdate(
-        { verifyToken },
-        { verifyByEmail: true },
+    console.log('verifyEmail');
+    const user = await User.findOne({ verifyToken });
+    if (!user) throw createHttpError(404, 'User not found!');
+
+    const session = await createSession(user._id);
+    console.log(session);
+    const userWithToken = await User.findOneAndUpdate(
+        { _id: user._id, verifyToken },
+        { verifyByEmail: true, token: session.accessToken },
         { new: true },
     );
-    if (!user) throw createHttpError(404, 'User not found!');
-    const session = await createSession(user._id);
+    console.log(userWithToken);
 
-    return { session, user };
+    return { session, userWithToken };
 };
-
-// const verifyToken = jwt.sign({ sub: email }, smtp.jwtSecret, {
-//     expiresIn: '15m',
-// });
-//login code
-
-export const loginUser = async data => {
-    const user = await findUserByEmail(data.email);
-
+// login code
+export const loginUser = async userData => {
+    const user = await findUserByEmail(userData.email);
+    console.log('USER', user);
     if (!user) throw createHttpError(404, 'User not found');
 
-    const isEqual = await bcrypt.compare(data.password, user.password);
+    const isEqual = await bcrypt.compare(userData.password, user.password);
     if (!isEqual) throw createHttpError(401, 'Unauthorized');
-
+    console.log('isEqual', isEqual);
     await Sessions.deleteOne({ userId: user._id });
 
-    const newSession = await createSession({ userId: user._id });
+    const newSession = await createSession(user._id);
+    console.log('newSession', newSession);
     return await Sessions.create(newSession);
 };
 
