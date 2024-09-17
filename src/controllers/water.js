@@ -8,9 +8,11 @@ import {
     findMonthlyWaterRecords,
     findUserById,
     getWaterRecordById,
+    getWaterRecordsByUserAndDate,
 } from '../services/water.js';
 import errorHandler from '../middlewares/errorHandler.js';
 import { format, startOfDay, endOfDay } from 'date-fns';
+import User from '../db/models/user.js';
 
 export const addWaterRecord = async (req, res, next) => {
     const { amount, date } = req.body;
@@ -115,22 +117,22 @@ export const getDailyWaterRecord = async (req, res, next) => {
 };
 
 export const getMonthlyWaterRecord = async (req, res, next) => {
-    const { year, month } = req.params;
-    const userId = req.user._id;
-
-    const user = await findUserById(userId);
-    if (!user) return next(errorHandler(404, 'User not found'));
-
-    const userTimezone = req.headers['timezone'] || 'UTC';
-    const startOfMonth = moment
-        .tz({ year, month: month - 1, day: 1 }, userTimezone)
-        .startOf('day');
-    const endOfMonth = moment
-        .tz({ year, month: month - 1 }, userTimezone)
-        .endOf('month')
-        .endOf('day');
+    const { id, year, month } = req.params;
+    const userId = id;
 
     try {
+        const user = await findUserById(userId);
+        if (!user) return next(errorHandler(404, 'User not found'));
+
+        const userTimezone = req.headers['timezone'] || 'UTC';
+        const startOfMonth = moment
+            .tz({ year, month: month - 1, day: 1 }, userTimezone)
+            .startOf('day');
+        const endOfMonth = moment
+            .tz({ year, month: month - 1 }, userTimezone)
+            .endOf('month')
+            .endOf('day');
+
         const waterRecords = await findMonthlyWaterRecords(
             userId,
             startOfMonth.toDate(),
@@ -192,6 +194,30 @@ export const getWaterRecordByIdController = async (req, res, next) => {
             .toFixed(2);
 
         res.json({
+            totalAmountForDay,
+            records,
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const getWaterRecordsByDay = async (req, res, next) => {
+    const { id, date } = req.params;
+
+    try {
+        const user = await User.findById(id);
+        if (!user) {
+            return next(errorHandler(404, 'User not found'));
+        }
+
+        const records = await getWaterRecordsByUserAndDate(id, date);
+
+        const totalAmountForDay = records
+            .reduce((acc, record) => acc + record.amount, 0)
+            .toFixed(2);
+
+        res.status(200).json({
             totalAmountForDay,
             records,
         });

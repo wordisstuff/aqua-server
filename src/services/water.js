@@ -1,5 +1,6 @@
 import WaterRecord from '../db/models/water.js';
 import User from '../db/models/user.js';
+import { startOfDay, endOfDay } from 'date-fns';
 
 export const createWaterRecord = async record => {
     return await WaterRecord.create(record);
@@ -48,7 +49,19 @@ export const getWaterRecordById = async (userId, date) => {
     const endOfDayDate = new Date(date.setHours(23, 59, 59, 999));
 
     const records = await WaterRecord.find({
-        owner: userId, // використовуємо userId для пошуку
+        owner: userId,
+        date: { $gte: startOfDayDate, $lte: endOfDayDate },
+    });
+
+    return records;
+};
+
+export const getWaterRecordsByUserAndDate = async (userId, date) => {
+    const startOfDayDate = startOfDay(new Date(date));
+    const endOfDayDate = endOfDay(new Date(date));
+
+    const records = await WaterRecord.find({
+        owner: userId,
         date: { $gte: startOfDayDate, $lte: endOfDayDate },
     });
 
