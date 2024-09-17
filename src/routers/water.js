@@ -6,7 +6,6 @@ import {
     addWaterRecordSchema,
     updateWaterRecordSchema,
     dateSchema,
-    monthYearSchema,
 } from '../validation/water.js';
 import express from 'express';
 import {
@@ -15,6 +14,8 @@ import {
     deleteWaterRecord,
     getDailyWaterRecord,
     getMonthlyWaterRecord,
+    getWaterRecordByIdController,
+    getWaterRecordsByDay,
 } from '../controllers/water.js';
 
 const waterRouter = express.Router();
@@ -45,10 +46,21 @@ waterRouter.get(
     ctrlWrapper(getDailyWaterRecord),
 );
 waterRouter.get(
-    '/monthly/:year/:month',
+    '/:id/monthly/:year/:month',
     jsonParser,
-    validateBody(monthYearSchema),
     ctrlWrapper(getMonthlyWaterRecord),
 );
+waterRouter.get(
+    '/:id',
+    isValidId,
+    jsonParser,
+    ctrlWrapper(getWaterRecordByIdController),
+);
 
+waterRouter.get(
+    '/:id/daily/:date',
+    isValidId,
+    jsonParser,
+    ctrlWrapper(getWaterRecordsByDay),
+);
 export default waterRouter;
