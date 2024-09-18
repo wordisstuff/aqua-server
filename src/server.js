@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
 import { pinoSettings } from './constants/constants.js';
-import { authDb } from './constants/index.js';
+import { authDb, redirectUrl } from './constants/index.js';
 import { notFindMiddleware } from './middlewares/notFindMiddleware.js';
 import path from 'node:path';
 
@@ -16,7 +16,7 @@ export const setupServer = () => {
     const app = express();
 
     app.use(pino(pinoSettings));
-    app.use(cors());
+    app.use(cors({ origin: `${redirectUrl}`, credentials: true }));
     app.use(cookieParser());
 
     app.use('/api-docs', swaggerDocs());

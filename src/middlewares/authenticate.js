@@ -4,6 +4,7 @@ import Sessions from '../db/models/session.js';
 
 const authenticate = async (req, res, next) => {
     const { authorization } = req.headers;
+    console.log('TOKEN BEARER', authorization);
     if (!authorization) {
         return next(
             createHttpError(401, 'Please provide Authorization header'),
@@ -18,11 +19,13 @@ const authenticate = async (req, res, next) => {
     const session = await Sessions.findOne({ accessToken });
 
     if (!session) {
+        console.log('Session not found!!');
         next(createHttpError(401, 'Session not found!!'));
         return;
     }
 
     if (new Date() > new Date(session.accessTokenValidUntil)) {
+        console.log('Access token expired');
         next(createHttpError(401, 'Access token expired'));
     }
 

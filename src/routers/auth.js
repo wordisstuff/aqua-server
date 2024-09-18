@@ -10,6 +10,7 @@ import {
     refreshUserController,
 } from '../controllers/auth.js';
 import { jsonParser } from '../constants/constants.js';
+import authenticate from '../middlewares/authenticate.js';
 
 const router = Router();
 
@@ -35,8 +36,8 @@ router.post(
 
 router.post('/logout', ctrlWrapper(logoutUserController));
 
-//refresh code
-router.post('/refresh', ctrlWrapper(refreshUserController));
+//current code
+router.get('/refresh', authenticate, ctrlWrapper(refreshUserController));
 //update user code
 
 //reset-token code

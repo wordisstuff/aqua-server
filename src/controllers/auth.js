@@ -1,18 +1,17 @@
-import { ONE_DAY } from '../constants/index.js';
+import { ONE_DAY, redirectUrl } from '../constants/index.js';
 import {
     registerUser,
     loginUser,
     logoutUser,
     verifyEmail,
+    refreshUser,
 } from '../services/auth.js';
 export const registerUserController = async (req, res) => {
-    const user = await registerUser(req.body);
-    console.log('BODY', req.body);
+    await registerUser(req.body);
     res.status(201).json({
         status: 201,
         message:
             'User registered! Please check your email to confirm your registration!',
-        data: user,
     });
 };
 //Verify code
@@ -20,6 +19,8 @@ export const verifyEmailController = async (req, res) => {
     const { verifyToken } = req.params;
 
     const { session, userWithToken } = await verifyEmail(verifyToken);
+    // res.clearCookie('sessionId');
+    // res.clearCookie('refreshToken');
 
     res.cookie('refreshToken', session.refreshToken, {
         httpOnly: true,
@@ -29,16 +30,55 @@ export const verifyEmailController = async (req, res) => {
         httpOnly: true,
         expires: new Date(Date.now() + ONE_DAY),
     });
-    return res.redirect(
-        `https://aqua-front-nine.vercel.app/verify/${userWithToken.token}`,
-    );
-    // return res.redirect(`http://localhost:5173/verify/${userWithToken.token}`);
+    return res.redirect(`${redirectUrl}/verify/${userWithToken.token}`);
 };
 //refresh code
 export const refreshUserController = async (req, res) => {
-    const newSession = await loginUser(req.body, req.cookies);
-    res.status(201).json({
-        session: newSession,
+    const {
+        _id,
+        name,
+        email,
+        gender,
+        photo,
+        weight,
+        activeTime,
+        recommendedWater,
+        verifyByEmail,
+    } = req.user;
+
+    const session = await refreshUser({
+        userId: _id,
+        sessionId: req.cookies.sessionId,
+        refreshToken: req.cookies.refreshToken,
+    });
+
+    res.cookie('refreshToken', session.refreshToken, {
+        httpOnly: true,
+        expires: new Date(Date.now() + ONE_DAY),
+    });
+
+    res.cookie('sessionId', session._id, {
+        httpOnly: true,
+        expires: new Date(Date.now() + ONE_DAY),
+    });
+    console.log('SESION', session);
+    res.json({
+        status: 200,
+        message: 'Successfully refreshed a session!',
+        data: {
+            user: {
+                _id,
+                name,
+                email,
+                gender,
+                photo,
+                weight,
+                activeTime,
+                recommendedWater,
+                verifyByEmail,
+            },
+            token: session.accessToken,
+        },
     });
 };
 //login code

@@ -49,6 +49,8 @@ export const smtp = {
 
 export const tps = {
     domain: env('APP_DOMAIN'),
+    global_dom: env('APP_GLOBAL_DOM'),
+    togle: env('SERVER'),
 };
 
 const CLOUDINARY = {
@@ -75,3 +77,6 @@ export const OAuth = {
     clientSecret: env(GOOGLE_AUTH.CLIENT_SECRET),
     jsonPath: JSON_PATH,
 };
+
+export const redirectUrl =
+    tps.togle === 'global' ? `${tps.global_dom}` : `${tps.domain}5173`;
