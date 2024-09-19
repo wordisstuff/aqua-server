@@ -17,4 +17,15 @@ export const loginUserSchema = Joi.object({
 
 // reset password schema
 
+// Схема валідації для оновлення пароля
+export const resetPasswordSchema = Joi.object({
+    token: Joi.string().required(), // Очікується рядок
+    password: Joi.string().min(6).required(),
+});
+
+// Middleware для перевірки електронної пошти
+export const validateCheckEmail = Joi.object({
+    email: Joi.string().email().required(),
+});
+
 // confirm OAuth schema

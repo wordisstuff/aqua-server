@@ -4,7 +4,7 @@ import User from '../db/models/user.js';
 import createSession from '../utils/createSession.js';
 import { authDb, smtp, tps } from '../constants/index.js';
 import templateMaker from '../utils/templateMaker.js';
-// import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { sendEmail } from '../utils/sendMail.js';
 import { v4 } from 'uuid';
 import Sessions from '../db/models/session.js';
@@ -108,3 +108,49 @@ export const refreshUser = async ({ userId, sessionId, refreshToken }) => {
 //reset password code
 
 //google login&signup code
+const generateToken = user => {
+    const payload = { id: user._id };
+    const secret = process.env.JWT_SECRET; // Переконайтесь, що значення існує
+    if (!secret) {
+        throw new Error('JWT_SECRET is not defined in environment variables');
+    }
+    const options = { expiresIn: '1h' }; // Час життя токену
+
+    return jwt.sign(payload, secret, options);
+};
+
+// Перевірка, чи існує електронна пошта в базі даних
+export const checkEmailService = async email => {
+    const user = await User.findOne({ email });
+    if (!user) {
+        throw new Error('Email not found');
+    }
+
+    const token = generateToken(user);
+    user.tokens = { reset: token };
+    await user.save();
+
+    console.log('Token saved for user:', token);
+
+    return token;
+};
+
+// Сервіс для скидання пароля користувача
+export const resetPasswordService = async (token, newPassword) => {
+    console.log('Looking for token:', token);
+
+    const user = await User.findOne({ 'tokens.reset': token });
+    if (!user) {
+        console.error('User not found with the provided token');
+        throw new Error('Invalid token');
+    }
+
+    console.log('User found:', user);
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    user.tokens.reset = undefined; // Очистіть токен після використання
+    await user.save();
+
+    return { success: true, message: 'Password has been reset' };
+};
