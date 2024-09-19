@@ -8,6 +8,7 @@ import templateMaker from '../utils/templateMaker.js';
 import { sendEmail } from '../utils/sendMail.js';
 import { v4 } from 'uuid';
 import Sessions from '../db/models/session.js';
+import gravatar from 'gravatar';
 
 export const findUserByEmail = email => User.findOne({ email });
 export const findUserById = id => User.findById(id);
@@ -31,10 +32,12 @@ export const registerUser = async userData => {
     });
 
     const hashedPassword = await bcrypt.hash(userData.password, 10);
+    const photoUrl = gravatar.url(userData.email);
     return await User.create({
         ...userData,
         password: hashedPassword,
         verifyToken,
+        photo: photoUrl,
     });
 };
 
@@ -69,9 +72,9 @@ export const loginUser = async userData => {
     console.log('isEqual', isEqual);
     await Sessions.deleteOne({ userId: user._id });
 
-    const newSession = await createSession(user._id);
+    const newSession = await createSession(user._id, user.verifyByEmail);
     console.log('newSession', newSession);
-    return await Sessions.create(newSession);
+    return newSession;
 };
 
 //logout code

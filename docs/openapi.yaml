@@ -12,7 +12,7 @@ tags:
     - name: Authentication
       description: Authentication operations
 servers:
-    - url: https://aqua-server-83k1.onrender.com
+    - url: https://aqua-back.onrender.com
     - url: http://localhost:8080
 paths:
     /auth/signup:

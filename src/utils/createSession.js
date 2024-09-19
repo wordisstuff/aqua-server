@@ -8,10 +8,10 @@ import Sessions from '../db/models/session.js';
 import randomToken from './randomToken.js';
 import jwt from 'jsonwebtoken';
 
-const createSession = async id => {
+const createSession = async (id, verifyByEmail) => {
     return await Sessions.create({
         userId: id,
-        accessToken: jwt.sign({ id }, smtp.jwtSecret),
+        accessToken: jwt.sign({ id, verifyByEmail }, smtp.jwtSecret),
         refreshToken: randomToken(30, 'base64'),
         accessTokenValidUntil: new Date(
             Date.now() + FIFTEEN_MINUTES + TWO_HOURS,
