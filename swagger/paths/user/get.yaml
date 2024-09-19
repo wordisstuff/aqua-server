@@ -1,0 +1,43 @@
+tags:
+    - User
+summary: Get user profile
+operationId: get
+description: 'Retrieve the authenticated user profile.'
+security:
+    - bearerAuth: []
+responses:
+    '200':
+        description: User profile data retrieved
+        content:
+            application/json:
+                schema:
+                    type: object
+                    properties:
+                        _id:
+                            type: string
+                            example: 60d0fe4f5311236168a109ca
+                        name:
+                            type: string
+                            example: John Doe
+                        email:
+                            type: string
+                            example: user@example.com
+                        avatar:
+                            type: string
+                            example: https://res.cloudinary.com/dntbkzhtq/image/upload/v1719141998/AquaTrack/defaultAvatar.webp
+                        gender:
+                            type: string
+                            example: woman
+                        weight:
+                            type: number
+                            example: 0
+                        dailyActivityTime:
+                            type: number
+                            example: 0
+                        dailyWaterNorm:
+                            type: number
+                            example: 1.5
+    '401':
+        $ref: '../../components/responses/401.yaml'
+    '500':
+        $ref: '../../components/responses/500.yaml'

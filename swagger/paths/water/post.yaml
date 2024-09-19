@@ -1,0 +1,60 @@
+tags:
+    - WaterRecord
+summary: Add water record
+operationId: addWaterRecord
+description: 'Add a new water record for the user.'
+security:
+    - bearerAuth: []
+requestBody:
+    required: true
+    content:
+        application/json:
+            schema:
+                type: object
+                properties:
+                    amount:
+                        type: number
+                        example: 0.4
+                    date:
+                        type: string
+                        format: date-time
+                        example: 2024-07-10T10:17:20.886Z
+responses:
+    '200':
+        description: Water record successfully added
+        content:
+            application/json:
+                schema:
+                    type: object
+                    properties:
+                        newWaterRecord:
+                            type: object
+                            properties:
+                                amount:
+                                    type: number
+                                    example: 0.5
+                                date:
+                                    type: string
+                                    format: date-time
+                                    example: 2024-07-10T10:17:20.886Z
+                                owner:
+                                    type: string
+                                    example: 667c4a6aa00f3339fea36b1b
+                                _id:
+                                    type: string
+                                    example: 66855549f18f2eac7515fd00
+                                createdAt:
+                                    type: string
+                                    format: date-time
+                                    example: 2024-07-03T13:42:33.278Z
+                                updatedAt:
+                                    type: string
+                                    format: date-time
+                                    example: 2024-07-03T13:42:33.278Z
+                        message:
+                            type: string
+                            example: Water record successfully added
+    '400':
+        $ref: '../../components/responses/400.yaml'
+    '500':
+        $ref: '../../components/responses/500.yaml'

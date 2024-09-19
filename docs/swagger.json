@@ -7,7 +7,7 @@
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "description": "This is a documentation for Contacts app"
+    "description": "This is a documentation for Water app"
   },
   "servers": [
     {
@@ -19,12 +19,16 @@
   ],
   "tags": [
     {
-      "name": "Water info",
-      "description": "Water operations"
-    },
-    {
       "name": "Authentication",
       "description": "Authentication operations"
+    },
+    {
+      "name": "User",
+      "description": "User profile operations"
+    },
+    {
+      "name": "Water info",
+      "description": "Water operations"
     }
   ],
   "paths": {
@@ -262,6 +266,630 @@
           }
         }
       }
+    },
+    "/users/update": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get user profile",
+        "operationId": "getUserProfile",
+        "description": "Retrieve the authenticated user profile.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User profile data retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "60d0fe4f5311236168a109ca"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "John Doe"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "user@example.com"
+                    },
+                    "avatar": {
+                      "type": "string",
+                      "example": "https://res.cloudinary.com/dntbkzhtq/image/upload/v1719141998/AquaTrack/defaultAvatar.webp"
+                    },
+                    "gender": {
+                      "type": "string",
+                      "example": "woman"
+                    },
+                    "weight": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "dailyActivityTime": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "dailyWaterNorm": {
+                      "type": "number",
+                      "example": 1.5
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/users/profile": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get user profile",
+        "operationId": "get",
+        "description": "Retrieve the authenticated user profile.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User profile data retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "60d0fe4f5311236168a109ca"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "John Doe"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "user@example.com"
+                    },
+                    "avatar": {
+                      "type": "string",
+                      "example": "https://res.cloudinary.com/dntbkzhtq/image/upload/v1719141998/AquaTrack/defaultAvatar.webp"
+                    },
+                    "gender": {
+                      "type": "string",
+                      "example": "woman"
+                    },
+                    "weight": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "dailyActivityTime": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "dailyWaterNorm": {
+                      "type": "number",
+                      "example": 1.5
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/users/happy": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "summary": "Get happy endpoint",
+        "operationId": "getHappy",
+        "description": "Retrieve the total count of users and a list of avatars.",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved happy data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer",
+                      "example": 100
+                    },
+                    "avatars": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "example": "https://res.cloudinary.com/dntbkzhtq/image/upload/v1719141998/AquaTrack/avatar.webp"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/water": {
+      "post": {
+        "tags": [
+          "WaterRecord"
+        ],
+        "summary": "Add water record",
+        "operationId": "addWaterRecord",
+        "description": "Add a new water record for the user.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "number",
+                    "example": 0.4
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2024-07-10T10:17:20.886Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Water record successfully added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "newWaterRecord": {
+                      "type": "object",
+                      "properties": {
+                        "amount": {
+                          "type": "number",
+                          "example": 0.5
+                        },
+                        "date": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-07-10T10:17:20.886Z"
+                        },
+                        "owner": {
+                          "type": "string",
+                          "example": "667c4a6aa00f3339fea36b1b"
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "66855549f18f2eac7515fd00"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-07-03T13:42:33.278Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-07-03T13:42:33.278Z"
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Water record successfully added"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/water/{id}": {
+      "patch": {
+        "tags": [
+          "WaterRecord"
+        ],
+        "summary": "Update water amount",
+        "operationId": "updateWaterRecord",
+        "description": "Update an existing water record.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "66855549f18f2eac7515fd00"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "number",
+                    "example": 0.2
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2024-07-10T10:17:20.886Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Water record successfully updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "updatedRecord": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "66855549f18f2eac7515fd00"
+                        },
+                        "amount": {
+                          "type": "number",
+                          "example": 0.2
+                        },
+                        "date": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-07-10T10:17:20.886Z"
+                        },
+                        "owner": {
+                          "type": "string",
+                          "example": "667c4a6aa00f3339fea36b1b"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-07-03T13:42:33.278Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-07-03T13:45:35.216Z"
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Water record successfully updated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "WaterRecord"
+        ],
+        "summary": "Delete water record",
+        "operationId": "deleteWaterRecord",
+        "description": "Delete an existing water record by ID.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "66855549f18f2eac7515fd00"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Water record successfully deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "newWaterRecord": {
+                      "type": "object",
+                      "properties": {
+                        "amount": {
+                          "type": "number",
+                          "example": 0.3
+                        },
+                        "date": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-06-28T11:35:59.880Z"
+                        },
+                        "owner": {
+                          "type": "string",
+                          "example": "4579687c17342250d5344321"
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "667ea32bdcebb99c66d54321"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-06-28T11:48:59.927Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-06-28T13:26:25.271Z"
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Water record successfully deleted"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/water/daily/{date}": {
+      "get": {
+        "tags": [
+          "WaterRecord"
+        ],
+        "summary": "Get daily water record",
+        "operationId": "getDailyWaterRecord",
+        "description": "Retrieve the total water consumption for a specific day.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "date",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2024-07-01"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Daily water record retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "totalAmountForDay": {
+                      "type": "number",
+                      "example": 1.4
+                    },
+                    "percentComplete": {
+                      "type": "integer",
+                      "example": 75
+                    },
+                    "records": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "amount": {
+                            "type": "number",
+                            "example": 0.5
+                          },
+                          "date": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2024-07-01T12:30:00Z"
+                          },
+                          "owner": {
+                            "type": "string",
+                            "example": "614f5e3e8c48d53a08a7efc6"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/water/monthly/{year}/{month}": {
+      "get": {
+        "tags": [
+          "WaterRecord"
+        ],
+        "summary": "Get monthly water record",
+        "operationId": "getMonthlyWaterRecord",
+        "description": "Retrieve the total water consumption for a specific month.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 2024
+            }
+          },
+          {
+            "name": "month",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 6
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Monthly water record retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "totalWaterForMonth": {
+                      "type": "number",
+                      "example": 23.4
+                    },
+                    "daysInMonth": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "67ca1234dceba44ac54b6"
+                          },
+                          "day": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2024-06-26"
+                          },
+                          "totalAmount": {
+                            "type": "number",
+                            "example": 1
+                          },
+                          "percentComplete": {
+                            "type": "number",
+                            "example": 66.66
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -272,6 +900,24 @@
       }
     },
     "responses": {
+      "400": {
+        "description": "Bad request, invalid input data.",
+        "content": {
+          "application/json": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "integer",
+                "example": 400
+              },
+              "message": {
+                "type": "string",
+                "example": "Invalid input data."
+              }
+            }
+          }
+        }
+      },
       "401": {
         "description": "Unauthorized error",
         "content": {
@@ -301,6 +947,37 @@
                     "message": {
                       "type": "string",
                       "example": "Access token expired"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Water info not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": "-status -message -data",
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 404
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Water info not found"
+                },
+                "data": {
+                  "type": "object",
+                  "required": "-message",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Water info not found"
                     }
                   }
                 }

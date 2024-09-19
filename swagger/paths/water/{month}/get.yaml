@@ -1,0 +1,55 @@
+tags:
+    - WaterRecord
+summary: Get monthly water record
+operationId: getMonthlyWaterRecord
+description: 'Retrieve the total water consumption for a specific month.'
+security:
+    - bearerAuth: []
+parameters:
+    - name: year
+      in: path
+      required: true
+      schema:
+          type: integer
+          example: 2024
+    - name: month
+      in: path
+      required: true
+      schema:
+          type: integer
+          example: 6
+responses:
+    '200':
+        description: Monthly water record retrieved
+        content:
+            application/json:
+                schema:
+                    type: object
+                    properties:
+                        totalWaterForMonth:
+                            type: number
+                            example: 23.4
+                        daysInMonth:
+                            type: array
+                            items:
+                                type: object
+                                properties:
+                                    id:
+                                        type: string
+                                        example: 67ca1234dceba44ac54b6
+                                    day:
+                                        type: string
+                                        format: date
+                                        example: 2024-06-26
+                                    totalAmount:
+                                        type: number
+                                        example: 1
+                                    percentComplete:
+                                        type: number
+                                        example: 66.66
+    '400':
+        $ref: '../../../components/responses/400.yaml'
+    '404':
+        $ref: '../../../components/responses/404.yaml'
+    '500':
+        $ref: '../../../components/responses/500.yaml'
