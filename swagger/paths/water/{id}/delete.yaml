@@ -1,0 +1,55 @@
+tags:
+    - WaterRecord
+summary: Delete water record
+operationId: deleteWaterRecord
+description: 'Delete an existing water record by ID.'
+security:
+    - bearerAuth: []
+parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+          type: string
+          example: 66855549f18f2eac7515fd00
+responses:
+    '200':
+        description: Water record successfully deleted
+        content:
+            application/json:
+                schema:
+                    type: object
+                    properties:
+                        newWaterRecord:
+                            type: object
+                            properties:
+                                amount:
+                                    type: number
+                                    example: 0.3
+                                date:
+                                    type: string
+                                    format: date-time
+                                    example: 2024-06-28T11:35:59.880Z
+                                owner:
+                                    type: string
+                                    example: 4579687c17342250d5344321
+                                _id:
+                                    type: string
+                                    example: 667ea32bdcebb99c66d54321
+                                createdAt:
+                                    type: string
+                                    format: date-time
+                                    example: 2024-06-28T11:48:59.927Z
+                                updatedAt:
+                                    type: string
+                                    format: date-time
+                                    example: 2024-06-28T13:26:25.271Z
+                        message:
+                            type: string
+                            example: Water record successfully deleted
+    '400':
+        $ref: '../../../components/responses/400.yaml'
+    '404':
+        $ref: '../../../components/responses/404.yaml'
+    '500':
+        $ref: '../../../components/responses/500.yaml'

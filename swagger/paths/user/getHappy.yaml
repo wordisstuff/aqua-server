@@ -1,0 +1,25 @@
+security:
+    - bearerAuth: []
+tags:
+    - User
+summary: Get happy endpoint
+operationId: getHappy
+description: 'Retrieve the total count of users and a list of avatars.'
+responses:
+    '200':
+        description: Successfully retrieved happy data
+        content:
+            application/json:
+                schema:
+                    type: object
+                    properties:
+                        count:
+                            type: integer
+                            example: 100
+                        avatars:
+                            type: array
+                            items:
+                                type: string
+                                example: https://res.cloudinary.com/dntbkzhtq/image/upload/v1719141998/AquaTrack/avatar.webp
+    '500':
+        $ref: '../../components/responses/500.yaml'
