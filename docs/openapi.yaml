@@ -5,14 +5,16 @@ info:
     license:
         name: Apache 2.0
         url: http://www.apache.org/licenses/LICENSE-2.0.html
-    description: This is a documentation for Contacts app
+    description: This is a documentation for Water app
 tags:
-    - name: Water info
-      description: Water operations
     - name: Authentication
       description: Authentication operations
+    - name: User
+      description: User profile operations
+    - name: Water info
+      description: Water operations
 servers:
-    - url: https://aqua-back.onrender.com
+    - url: https://aqua-server-83k1.onrender.com
     - url: http://localhost:8080
 paths:
     /auth/signup:
@@ -24,6 +26,29 @@ paths:
     /auth/logout:
         post:
             $ref: ../swagger/paths/auth/logout.yaml
+    /users/update:
+        patch:
+            $ref: ../swagger/paths/user/patch.yaml
+    /users/profile:
+        get:
+            $ref: ../swagger/paths/user/get.yaml
+    /users/happy:
+        get:
+            $ref: ../swagger/paths/user/getHappy.yaml
+    /water:
+        post:
+            $ref: ../swagger/paths/water/post.yaml
+    /water/{id}:
+        patch:
+            $ref: ../swagger/paths/water/{id}/patch.yaml
+        delete:
+            $ref: ../swagger/paths/water/{id}/delete.yaml
+    /water/daily/{date}:
+        get:
+            $ref: ../swagger/paths/water/{date}/get.yaml
+    /water/monthly/{year}/{month}:
+        get:
+            $ref: ../swagger/paths/water/{month}/get.yaml
 
 components:
     securitySchemes:

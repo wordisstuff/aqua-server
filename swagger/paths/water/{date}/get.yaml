@@ -1,0 +1,50 @@
+tags:
+    - WaterRecord
+summary: Get daily water record
+operationId: getDailyWaterRecord
+description: 'Retrieve the total water consumption for a specific day.'
+security:
+    - bearerAuth: []
+parameters:
+    - name: date
+      in: path
+      required: true
+      schema:
+          type: string
+          format: date
+          example: 2024-07-01
+responses:
+    '200':
+        description: Daily water record retrieved
+        content:
+            application/json:
+                schema:
+                    type: object
+                    properties:
+                        totalAmountForDay:
+                            type: number
+                            example: 1.4
+                        percentComplete:
+                            type: integer
+                            example: 75
+                        records:
+                            type: array
+                            items:
+                                type: object
+                                properties:
+                                    amount:
+                                        type: number
+                                        example: 0.5
+                                    date:
+                                        type: string
+                                        format: date-time
+                                        example: 2024-07-01T12:30:00Z
+                                    owner:
+                                        type: string
+                                        example: 614f5e3e8c48d53a08a7efc6
+    '400':
+        $ref: '../../../components/responses/400.yaml'
+    '404':
+        $ref: '../../../components/responses/404.yaml'
+    '500':
+        $ref: '../../../components/responses/500.yaml'
