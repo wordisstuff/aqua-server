@@ -18,7 +18,7 @@ export const setupServer = () => {
     app.use(pino(pinoSettings));
     app.use(cors({ origin: `${redirectUrl}`, credentials: true }));
     app.use(cookieParser());
-
+    app.use(express.json());
     app.use('/api-docs', swaggerDocs());
     app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 

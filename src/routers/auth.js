@@ -1,18 +1,27 @@
 import { Router } from 'express';
 import validateBody from '../middlewares/validateBody.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
-import { registerUserSchema, loginUserSchema } from '../validation/auth.js';
+import {
+    registerUserSchema,
+    loginUserSchema,
+    validateCheckEmail,
+    resetPasswordSchema,
+} from '../validation/auth.js';
 import {
     registerUserController,
     loginUserController,
     logoutUserController,
     verifyEmailController,
     refreshUserController,
+    checkEmailController,
+    resetPasswordController,
 } from '../controllers/auth.js';
 import { jsonParser } from '../constants/constants.js';
 import authenticate from '../middlewares/authenticate.js';
 
 const router = Router();
+//import bcrypt from 'bcrypt';
+//import User from '../db/models/user.js';
 
 router.post(
     '/signup',
@@ -23,8 +32,7 @@ router.post(
 
 router.get('/verify/:verifyToken', ctrlWrapper(verifyEmailController));
 
-//login code
-
+// Login route
 router.post(
     '/signin',
     jsonParser,
@@ -32,20 +40,24 @@ router.post(
     ctrlWrapper(loginUserController),
 );
 
-//logout code
-
+// Logout route
 router.post('/logout', ctrlWrapper(logoutUserController));
 
-//current code
+// Refresh user route
 router.get('/refresh', authenticate, ctrlWrapper(refreshUserController));
-//update user code
 
-//reset-token code
+// Check email route
+router.post(
+    '/check-email',
+    validateBody(validateCheckEmail),
+    ctrlWrapper(checkEmailController),
+);
 
-//reset password code
-
-//google auth code
-
-//confirm google auth code
+// Reset password route
+router.patch(
+    '/reset-password',
+    validateBody(resetPasswordSchema),
+    ctrlWrapper(resetPasswordController),
+);
 
 export default router;

@@ -5,7 +5,11 @@ import {
     logoutUser,
     verifyEmail,
     refreshUser,
+    checkEmailService,
+    resetPasswordService,
 } from '../services/auth.js';
+//import jwt from 'jsonwebtoken';
+
 export const registerUserController = async (req, res) => {
     await registerUser(req.body);
     res.status(201).json({
@@ -130,3 +134,68 @@ export async function logoutUserController(req, res) {
 //google auth code
 
 //confirm google auth code
+
+export const checkEmailController = async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) {
+            return res
+                .status(400)
+                .json({ success: false, message: 'Email is required' });
+        }
+
+        // Отримуємо токен від сервісу
+        const token = await checkEmailService(email);
+
+        // Повертаємо токен напряму у відповіді
+        res.status(200).json({
+            success: true,
+            message: 'Email processed successfully',
+            token, // Повертаємо токен без вкладень
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Something went wrong',
+            data: { message: error.message },
+        });
+    }
+};
+
+// Контролер для скидання пароля
+export const resetPasswordController = async (req, res) => {
+    const { token, password } = req.body;
+
+    // Переконайтесь, що token - це рядок
+    if (typeof token !== 'string') {
+        return res.status(400).json({
+            status: 400,
+            message: 'BadRequestError',
+            data: {
+                message: 'Bad Request',
+                data: [
+                    {
+                        message: '"token" must be a string',
+                        path: ['token'],
+                        type: 'string.base',
+                        context: { label: 'token', value: token },
+                    },
+                ],
+            },
+        });
+    }
+
+    try {
+        const result = await resetPasswordService(token, password);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(400).json({
+            status: 400,
+            message: 'BadRequestError',
+            data: {
+                message: 'Bad Request',
+                data: [{ message: error.message }],
+            },
+        });
+    }
+};
