@@ -4,8 +4,8 @@ import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import {
     registerUserSchema,
     loginUserSchema,
-    validateCheckEmail,
     resetPasswordSchema,
+    emailSchema,
 } from '../validation/auth.js';
 import {
     registerUserController,
@@ -13,8 +13,8 @@ import {
     logoutUserController,
     verifyEmailController,
     refreshUserController,
-    checkEmailController,
-    resetPasswordController,
+    sendResetEmail,
+    resetPassword,
 } from '../controllers/auth.js';
 import { jsonParser } from '../constants/constants.js';
 import authenticate from '../middlewares/authenticate.js';
@@ -48,16 +48,17 @@ router.get('/refresh', authenticate, ctrlWrapper(refreshUserController));
 
 // Check email route
 router.post(
-    '/check-email',
-    validateBody(validateCheckEmail),
-    ctrlWrapper(checkEmailController),
+    '/send-reset-email',
+    validateBody(emailSchema),
+    ctrlWrapper(sendResetEmail),
 );
 
 // Reset password route
-router.patch(
-    '/reset-password',
+
+router.post(
+    '/reset-pwd',
     validateBody(resetPasswordSchema),
-    ctrlWrapper(resetPasswordController),
+    ctrlWrapper(resetPassword),
 );
 
 export default router;
