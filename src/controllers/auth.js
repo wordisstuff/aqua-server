@@ -5,10 +5,12 @@ import {
     logoutUser,
     verifyEmail,
     refreshUser,
-    checkEmailService,
-    resetPasswordService,
 } from '../services/auth.js';
-//import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
+import createHttpError from 'http-errors';
+import User from '../db/models/user.js';
+import bcrypt from 'bcrypt';
+import nodemailer from 'nodemailer';
 
 export const registerUserController = async (req, res) => {
     await registerUser(req.body);
@@ -123,68 +125,121 @@ export async function logoutUserController(req, res) {
 //google auth code
 
 //confirm google auth code
-
-export const checkEmailController = async (req, res) => {
+export const resetPassword = async (req, res, next) => {
     try {
-        const { email } = req.body;
-        if (!email) {
-            return res
-                .status(400)
-                .json({ success: false, message: 'Email is required' });
+        const { token, password } = req.body;
+
+        const { email } = jwt.verify(token, process.env.JWT_SECRET);
+
+        const user = await User.findOne({ email });
+        if (!user) {
+            throw createHttpError(404, 'User not found!');
         }
 
-        // Отримуємо токен від сервісу
-        const token = await checkEmailService(email);
+        const hashedPassword = await bcrypt.hash(password, 10);
+        user.password = hashedPassword;
+        await user.save();
 
-        // Повертаємо токен напряму у відповіді
         res.status(200).json({
-            success: true,
-            message: 'Email processed successfully',
-            token, // Повертаємо токен без вкладень
+            status: 200,
+            message: 'Password has been successfully reset.',
+            data: {},
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Something went wrong',
-            data: { message: error.message },
-        });
+        next(createHttpError(401, 'Token is expired or invalid.'));
     }
 };
 
-// Контролер для скидання пароля
-export const resetPasswordController = async (req, res) => {
-    const { token, password } = req.body;
+// Налаштування Nodemailer
+const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD,
+    },
+});
 
-    // Переконайтесь, що token - це рядок
-    if (typeof token !== 'string') {
-        return res.status(400).json({
-            status: 400,
-            message: 'BadRequestError',
-            data: {
-                message: 'Bad Request',
-                data: [
-                    {
-                        message: '"token" must be a string',
-                        path: ['token'],
-                        type: 'string.base',
-                        context: { label: 'token', value: token },
-                    },
-                ],
-            },
-        });
+transporter.verify((error, success) => {
+    if (error) {
+        console.log('SMTP connection error:', error);
+    } else {
+        console.log('SMTP server is ready to send emails');
     }
+});
 
+export const sendResetEmail = async (req, res, next) => {
     try {
-        const result = await resetPasswordService(token, password);
-        res.status(200).json(result);
-    } catch (error) {
-        res.status(400).json({
-            status: 400,
-            message: 'BadRequestError',
-            data: {
-                message: 'Bad Request',
-                data: [{ message: error.message }],
-            },
+        const { email } = req.body;
+
+        // Перевірка валідності email
+        if (!email) {
+            throw createHttpError(400, 'Email is required');
+        }
+
+        // Перевірка, чи існує користувач з таким email
+        console.log('Searching for user with email:', email);
+        const user = await User.findOne({ email });
+        if (!user) {
+            throw createHttpError(404, 'User not found!');
+        }
+        console.log('User found:', user);
+
+        // Генерація JWT токену для скидання пароля
+        console.log('Генерація токену для:', user.email);
+        const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
+            expiresIn: '5m',
         });
+        console.log('Токен згенеровано:', token);
+
+        // Створення посилання для скидання пароля
+        const resetLink = `${process.env.APP_DOMAIN}/forgotPassword?token=${token}`;
+
+        // Налаштування email
+        const mailOptions = {
+            from: process.env.SMTP_FROM,
+            to: email,
+            subject: 'Password Reset',
+            html: `<p>Click the link below to reset your password:</p><p><a href="${resetLink}">${resetLink}</a></p>`,
+        };
+
+        // Надсилання email
+        await transporter.sendMail(mailOptions);
+
+        res.status(200).json({
+            status: 200,
+            message: 'Reset password email has been successfully sent.',
+            data: {},
+        });
+    } catch (error) {
+        if (
+            error.message.includes('Email is required') ||
+            error.message.includes('User not found')
+        ) {
+            next(error);
+        } else {
+            next(
+                createHttpError(
+                    500,
+                    'Failed to send the email, please try again later.',
+                ),
+            );
+        }
     }
 };
+
+transporter.sendMail(
+    {
+        from: process.env.SMTP_FROM,
+        to: 'test@example.com', // замініть на свою адресу
+        subject: 'Test Email',
+        text: 'This is a test email',
+    },
+    (error, info) => {
+        if (error) {
+            console.log('Error sending test email:', error);
+        } else {
+            console.log('Test email sent:', info.response);
+        }
+    },
+);
