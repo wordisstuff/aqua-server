@@ -193,7 +193,7 @@ export const sendResetEmail = async (req, res, next) => {
         console.log('Токен згенеровано:', token);
 
         // Створення посилання для скидання пароля
-        const resetLink = `${process.env.APP_DOMAIN}/forgotPassword?token=${token}`;
+        const resetLink = `${process.env.APP_DOMAIN}5173/forgotPassword?token=${token}`;
 
         // Налаштування email
         const mailOptions = {
