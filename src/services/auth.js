@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
 import User from '../db/models/user.js';
 import createSession from '../utils/createSession.js';
-import { authDb, smtp, tps } from '../constants/index.js';
+import { serverUrl, smtp } from '../constants/index.js';
 import templateMaker from '../utils/templateMaker.js';
 import jwt from 'jsonwebtoken';
 import { sendEmail } from '../utils/sendMail.js';
@@ -20,8 +20,7 @@ export const registerUser = async userData => {
     const verifyToken = v4();
     const html = templateMaker({
         name: email,
-        // link: `${tps.domain}/auth/verify/${verifyToken}`,
-        link: `${tps.domain}${authDb.port}/auth/verify/${verifyToken}`,
+        link: `${serverUrl}/auth/verify/${verifyToken}`,
     });
 
     await sendEmail({

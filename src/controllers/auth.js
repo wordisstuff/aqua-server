@@ -40,14 +40,14 @@ export const verifyEmailController = async (req, res) => {
 export const refreshUserController = async (req, res) => {
     const {
         _id,
-        name,
-        email,
-        gender,
-        photo,
-        weight,
-        activeTime,
-        recommendedWater,
-        verifyByEmail,
+        // name,
+        // email,
+        // gender,
+        // photo,
+        // weight,
+        // activeTime,
+        // recommendedWater,
+        // verifyByEmail,
     } = req.user;
 
     const session = await refreshUser({

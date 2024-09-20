@@ -50,6 +50,7 @@ export const smtp = {
 export const tps = {
     domain: env('APP_DOMAIN'),
     global_dom: env('APP_GLOBAL_DOM'),
+    global_server: env('APP_GLOBAL_SERVER'),
     togle: env('SERVER'),
 };
 
@@ -80,3 +81,8 @@ export const OAuth = {
 
 export const redirectUrl =
     tps.togle === 'global' ? `${tps.global_dom}` : `${tps.domain}5173`;
+
+export const serverUrl =
+    tps.togle === 'global'
+        ? `${tps.global_server}`
+        : `{tps.domain}${authDb.port}`;
