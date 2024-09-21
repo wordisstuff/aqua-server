@@ -9,6 +9,7 @@ import { sendEmail } from '../utils/sendMail.js';
 import { v4 } from 'uuid';
 import Sessions from '../db/models/session.js';
 import gravatar from 'gravatar';
+import { validateCode } from '../utils/googleOAuth2.js';
 
 export const findUserByEmail = email => User.findOne({ email });
 export const findUserById = id => User.findById(id);
@@ -153,3 +154,30 @@ export const resetPasswordService = async (token, newPassword) => {
 
     return { success: true, message: 'Password has been reset' };
 };
+
+export async function loginOrRegisterWithGoogle(code) {
+    const ticket = await validateCode(code);
+    const payload = ticket.getPayload();
+    if (typeof payload === 'undefined') {
+        throw createHttpError(401, 'Unauthorized');
+    }
+    const user = await User.findOne({ email: payload.email });
+    const password = await bcrypt.hash(
+        crypto.randomBytes(30).toString('base64'),
+        10,
+    );
+
+    if (user === null) {
+        const createdUser = await User.create({
+            email: payload.email,
+            name: payload.name,
+            password,
+        });
+
+        let newUserSession = await createSession(createdUser._id);
+        return newUserSession;
+    }
+    await Sessions.deleteOne({ _id: user._id });
+    let session = await createSession(user._id);
+    return session;
+}

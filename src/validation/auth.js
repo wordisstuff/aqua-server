@@ -28,3 +28,6 @@ export const resetPasswordSchema = Joi.object({
 });
 
 // confirm OAuth schema
+export const confirmOAuthSchema = Joi.object({
+    code: Joi.string().required()
+});

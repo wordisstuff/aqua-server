@@ -6,6 +6,7 @@ import {
     loginUserSchema,
     resetPasswordSchema,
     emailSchema,
+    confirmOAuthSchema,
 } from '../validation/auth.js';
 import {
     registerUserController,
@@ -15,6 +16,8 @@ import {
     refreshUserController,
     sendResetEmail,
     resetPassword,
+    getOAuthUrlController,
+    confirmOAuthController,
 } from '../controllers/auth.js';
 import { jsonParser } from '../constants/constants.js';
 import authenticate from '../middlewares/authenticate.js';
@@ -60,5 +63,9 @@ router.post(
     validateBody(resetPasswordSchema),
     ctrlWrapper(resetPassword),
 );
+
+router.get('/google-redirect', ctrlWrapper(getOAuthUrlController));
+
+router.post('/google', jsonParser, validateBody(confirmOAuthSchema), ctrlWrapper(confirmOAuthController));
 
 export default router;
