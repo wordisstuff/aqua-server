@@ -11,6 +11,7 @@ import createHttpError from 'http-errors';
 import User from '../db/models/user.js';
 import bcrypt from 'bcrypt';
 import nodemailer from 'nodemailer';
+import templateMakerResetPwd from '../utils/templateMakerResetPwd.js';
 
 export const registerUserController = async (req, res) => {
     await registerUser(req.body);
@@ -194,15 +195,17 @@ export const sendResetEmail = async (req, res, next) => {
 
         // Створення посилання для скидання пароля
         const resetLink = `${redirectUrl}/forgotPassword?token=${token}`;
-
+        const html = templateMakerResetPwd({
+            name: email,
+            link: resetLink,
+        });
         // Налаштування email
         const mailOptions = {
             from: process.env.SMTP_FROM,
             to: email,
             subject: 'Password Reset',
-            html: `<p>Click the link below to reset your password:</p><p><a href="${resetLink}">${resetLink}</a></p>`,
+            html,
         };
-
         // Надсилання email
         await transporter.sendMail(mailOptions);
 
