@@ -85,4 +85,4 @@ export const redirectUrl =
 export const serverUrl =
     tps.togle === 'global'
         ? `${tps.global_server}`
-        : `{tps.domain}${authDb.port}`;
+        : `${tps.domain}${authDb.port}`;

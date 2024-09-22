@@ -1,4 +1,23 @@
 import { model, Schema } from 'mongoose';
+export const serializeUser = ({
+    name,
+    email,
+    gender,
+    photo,
+    weight,
+    activeTime,
+    recommendedWater,
+    verifyByEmail,
+}) => ({
+    name,
+    email,
+    gender,
+    photo,
+    weight,
+    activeTime,
+    recommendedWater,
+    verifyByEmail,
+});
 
 const userSchema = new Schema(
     {

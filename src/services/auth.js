@@ -74,7 +74,8 @@ export const loginUser = async userData => {
 
     const newSession = await createSession(user._id, user.verifyByEmail);
     console.log('newSession', newSession);
-    return newSession;
+
+    return { user, session: newSession };
 };
 
 //logout code

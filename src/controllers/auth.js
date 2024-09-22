@@ -9,17 +9,19 @@ import {
 } from '../services/auth.js';
 import jwt from 'jsonwebtoken';
 import createHttpError from 'http-errors';
-import User from '../db/models/user.js';
+import User, { serializeUser } from '../db/models/user.js';
 import bcrypt from 'bcrypt';
 import nodemailer from 'nodemailer';
 import { generateAuthUrl } from '../utils/googleOAuth2.js';
+import templateMakerResetPwd from '../utils/templateMakerResetPwd.js';
 
 export const registerUserController = async (req, res) => {
-    await registerUser(req.body);
+    const user = await registerUser(req.body);
     res.status(201).json({
         status: 201,
         message:
             'User registered! Please check your email to confirm your registration!',
+        data: { user: serializeUser(user) },
     });
 };
 //Verify code
@@ -82,7 +84,7 @@ export const refreshUserController = async (req, res) => {
 export const loginUserController = async (req, res) => {
     console.log(req.body);
 
-    const session = await loginUser(req.body);
+    const { user, session } = await loginUser(req.body);
 
     res.cookie('refreshToken', session.refreshToken, {
         httpOnly: true,
@@ -98,6 +100,7 @@ export const loginUserController = async (req, res) => {
         status: 200,
         message: 'Successfully logged in an user!',
         data: {
+            user: serializeUser(user),
             token: session.accessToken,
         },
     });
@@ -147,7 +150,8 @@ export const resetPassword = async (req, res, next) => {
             message: 'Password has been successfully reset.',
             data: {},
         });
-    } catch (error) {
+    } catch (e) {
+        console.log(e);
         next(createHttpError(401, 'Token is expired or invalid.'));
     }
 };
@@ -196,15 +200,17 @@ export const sendResetEmail = async (req, res, next) => {
 
         // Створення посилання для скидання пароля
         const resetLink = `${redirectUrl}/forgotPassword?token=${token}`;
-
+        const html = templateMakerResetPwd({
+            name: email,
+            link: resetLink,
+        });
         // Налаштування email
         const mailOptions = {
             from: process.env.SMTP_FROM,
             to: email,
             subject: 'Password Reset',
-            html: `<p>Click the link below to reset your password:</p><p><a href="${resetLink}">${resetLink}</a></p>`,
+            html,
         };
-
         // Надсилання email
         await transporter.sendMail(mailOptions);
 
@@ -276,4 +282,10 @@ export async function confirmOAuthController(req, res) {
             token: session.accessToken,
         },
     });
-}
+};
+
+export const currentUserController = (req, res) => {
+    res.status(200).json({
+        user: serializeUser(req.user),
+    });
+};

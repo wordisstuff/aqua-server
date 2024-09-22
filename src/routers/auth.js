@@ -13,11 +13,11 @@ import {
     loginUserController,
     logoutUserController,
     verifyEmailController,
-    refreshUserController,
     sendResetEmail,
     resetPassword,
     getOAuthUrlController,
     confirmOAuthController,
+    currentUserController,
 } from '../controllers/auth.js';
 import { jsonParser } from '../constants/constants.js';
 import authenticate from '../middlewares/authenticate.js';
@@ -47,7 +47,8 @@ router.post(
 router.post('/logout', ctrlWrapper(logoutUserController));
 
 // Refresh user route
-router.get('/refresh', authenticate, ctrlWrapper(refreshUserController));
+router.get('/current', authenticate, ctrlWrapper(currentUserController));
+// router.get('/refresh', authenticate, ctrlWrapper(refreshUserController));
 
 // Check email route
 router.post(
