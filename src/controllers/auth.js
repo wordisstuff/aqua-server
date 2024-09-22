@@ -5,12 +5,14 @@ import {
     logoutUser,
     verifyEmail,
     refreshUser,
+    loginOrRegisterWithGoogle,
 } from '../services/auth.js';
 import jwt from 'jsonwebtoken';
 import createHttpError from 'http-errors';
 import User, { serializeUser } from '../db/models/user.js';
 import bcrypt from 'bcrypt';
 import nodemailer from 'nodemailer';
+import { generateAuthUrl } from '../utils/googleOAuth2.js';
 import templateMakerResetPwd from '../utils/templateMakerResetPwd.js';
 
 export const registerUserController = async (req, res) => {
@@ -249,6 +251,38 @@ transporter.sendMail(
         }
     },
 );
+
+export async function getOAuthUrlController(req, res) {
+    const url = generateAuthUrl();
+    res.send({
+        status: 200,
+        message: 'Succesfully get Google OAuth',
+        data: { url },
+    });
+}
+
+export async function confirmOAuthController(req, res) {
+    const { code } = req.body;
+    const session = await loginOrRegisterWithGoogle(code);
+
+    res.cookie('refreshToken', session.refreshToken, {
+        httpOnly: true,
+        expires: session.refreshTokenValidUntil,
+    });
+
+    res.cookie('sessionId', session._id, {
+        httpOnly: true,
+        expires: session.refreshTokenValidUntil,
+    });
+
+    res.status(200).json({
+        status: 200,
+        message: 'login with Google completed',
+        data: {
+            token: session.accessToken,
+        },
+    });
+};
 
 export const currentUserController = (req, res) => {
     res.status(200).json({
