@@ -1,5 +1,5 @@
 import {
-    FIFTEEN_MINUTES,
+    // FIFTEEN_MINUTES,
     ONE_DAY,
     smtp,
     TWO_HOURS,
@@ -13,9 +13,7 @@ const createSession = async (id, verifyByEmail) => {
         userId: id,
         accessToken: jwt.sign({ id, verifyByEmail }, smtp.jwtSecret),
         refreshToken: randomToken(30, 'base64'),
-        accessTokenValidUntil: new Date(
-            Date.now() + FIFTEEN_MINUTES + TWO_HOURS,
-        ),
+        accessTokenValidUntil: new Date(Date.now() + TWO_HOURS),
         refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
     });
 };

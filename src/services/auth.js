@@ -85,21 +85,29 @@ export const logoutUser = sessionId => {
 };
 
 //refresh session code
-export const refreshUser = async ({ userId, sessionId, refreshToken }) => {
+export const refreshUser = async ({ sessionId, refreshToken }) => {
     console.log(sessionId, refreshToken);
     const session = await Sessions.findOne({
         _id: sessionId,
         refreshToken,
     });
 
-    if (!session) throw createHttpError(401, 'Session not found');
+    if (!session) throw createHttpError(404, 'Session not found');
 
     if (new Date() > new Date(session.refreshTokenValidUntil)) {
-        throw createHttpError(401, 'Session token expired');
+        throw createHttpError(404, 'Session token expired');
     }
-
+    // const updatedSession = await Sessions.findByIdAndUpdate(
+    //     sessionId,
+    //     {
+    //         accessToken: jwt.sign({ id: session.userId }, smtp.jwtSecret),
+    //         accessTokenValidUntil: new Date(Date.now() + 20000),
+    //     },
+    //     { new: true },
+    // );
     await Sessions.deleteOne({ refreshToken });
-    const newSession = await createSession(userId);
+
+    const newSession = await createSession(session.userId);
     return newSession;
 };
 //update user code

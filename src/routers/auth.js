@@ -18,6 +18,7 @@ import {
     getOAuthUrlController,
     confirmOAuthController,
     currentUserController,
+    refreshUserController,
 } from '../controllers/auth.js';
 import { jsonParser } from '../constants/constants.js';
 import authenticate from '../middlewares/authenticate.js';
@@ -48,7 +49,7 @@ router.post('/logout', ctrlWrapper(logoutUserController));
 
 // Refresh user route
 router.get('/current', authenticate, ctrlWrapper(currentUserController));
-// router.get('/refresh', authenticate, ctrlWrapper(refreshUserController));
+router.post('/refresh', ctrlWrapper(refreshUserController));
 
 // Check email route
 router.post(
@@ -67,6 +68,11 @@ router.post(
 
 router.get('/google-redirect', ctrlWrapper(getOAuthUrlController));
 
-router.post('/google', jsonParser, validateBody(confirmOAuthSchema), ctrlWrapper(confirmOAuthController));
+router.post(
+    '/google',
+    jsonParser,
+    validateBody(confirmOAuthSchema),
+    ctrlWrapper(confirmOAuthController),
+);
 
 export default router;

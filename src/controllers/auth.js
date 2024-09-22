@@ -44,20 +44,7 @@ export const verifyEmailController = async (req, res) => {
 };
 //refresh code
 export const refreshUserController = async (req, res) => {
-    const {
-        _id,
-        // name,
-        // email,
-        // gender,
-        // photo,
-        // weight,
-        // activeTime,
-        // recommendedWater,
-        // verifyByEmail,
-    } = req.user;
-
     const session = await refreshUser({
-        userId: _id,
         sessionId: req.cookies.sessionId,
         refreshToken: req.cookies.refreshToken,
     });
@@ -282,7 +269,7 @@ export async function confirmOAuthController(req, res) {
             token: session.accessToken,
         },
     });
-};
+}
 
 export const currentUserController = (req, res) => {
     res.status(200).json({
