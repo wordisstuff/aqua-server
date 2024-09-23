@@ -84,26 +84,24 @@ export const deleteWaterRecord = async (req, res, next) => {
 
 export const getDailyWaterRecord = async (req, res, next) => {
     const { date } = req.params;
-    const userId = req.user._id;
-
-    const user = await findUserById(userId);
-    if (!user) return next(errorHandler(404, 'User not found'));
-
+    console.log(date);
     const dateObject = new Date(date);
+    console.log(dateObject);
     const startOfDayDate = startOfDay(dateObject);
     const endOfDayDate = endOfDay(dateObject);
 
     try {
         const records = await findDailyWaterRecords(
-            userId,
+            req.user._id,
             startOfDayDate,
             endOfDayDate,
         );
+        console.log('records', records);
         const totalAmountForDay = records
             .reduce((acc, record) => acc + record.amount, 0)
             .toFixed(2);
         const percentComplete = Math.floor(
-            (totalAmountForDay / user.dailyWaterNorm) * 100,
+            (totalAmountForDay / req.user.recommendedWater) * 100,
         );
 
         res.json({

@@ -23,6 +23,7 @@ export const findDailyWaterRecords = async (
     startOfDayDate,
     endOfDayDate,
 ) => {
+    console.log('DATESSS', startOfDayDate, '2', endOfDayDate);
     return await WaterRecord.find({
         owner: userId,
         date: { $gte: startOfDayDate, $lte: endOfDayDate },
