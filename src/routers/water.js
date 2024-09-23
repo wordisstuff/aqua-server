@@ -1,6 +1,7 @@
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { jsonParser } from '../constants/constants.js';
 import validateBody from '../middlewares/validateBody.js';
+import validateParams from '../middlewares/validateParams.js';
 import isValidId from '../middlewares/isValidId.js';
 import {
     addWaterRecordSchema,
@@ -42,7 +43,7 @@ waterRouter.delete(
 waterRouter.get(
     '/daily/:date',
     jsonParser,
-    validateBody(dateSchema),
+    validateParams(dateSchema),
     ctrlWrapper(getDailyWaterRecord),
 );
 waterRouter.get(
