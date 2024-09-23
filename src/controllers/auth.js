@@ -6,6 +6,7 @@ import {
     verifyEmail,
     refreshUser,
     loginOrRegisterWithGoogle,
+    updateUser,
 } from '../services/auth.js';
 import jwt from 'jsonwebtoken';
 import createHttpError from 'http-errors';
@@ -24,49 +25,7 @@ export const registerUserController = async (req, res) => {
         data: { user: serializeUser(user) },
     });
 };
-//Verify code
-export const verifyEmailController = async (req, res) => {
-    const { verifyToken } = req.params;
 
-    const { session, userWithToken } = await verifyEmail(verifyToken);
-    // res.clearCookie('sessionId');
-    // res.clearCookie('refreshToken');
-
-    res.cookie('refreshToken', session.refreshToken, {
-        httpOnly: true,
-        expires: new Date(Date.now() + ONE_DAY),
-    });
-    res.cookie('sessionId', session._id, {
-        httpOnly: true,
-        expires: new Date(Date.now() + ONE_DAY),
-    });
-    return res.redirect(`${redirectUrl}/verify/${userWithToken.token}`);
-};
-//refresh code
-export const refreshUserController = async (req, res) => {
-    const session = await refreshUser({
-        sessionId: req.cookies.sessionId,
-        refreshToken: req.cookies.refreshToken,
-    });
-
-    res.cookie('refreshToken', session.refreshToken, {
-        httpOnly: true,
-        expires: new Date(Date.now() + ONE_DAY),
-    });
-
-    res.cookie('sessionId', session._id, {
-        httpOnly: true,
-        expires: new Date(Date.now() + ONE_DAY),
-    });
-    console.log('SESION', session);
-    res.json({
-        status: 200,
-        message: 'Successfully refreshed a session!',
-        data: {
-            token: session.accessToken,
-        },
-    });
-};
 //login code
 export const loginUserController = async (req, res) => {
     console.log(req.body);
@@ -94,7 +53,6 @@ export const loginUserController = async (req, res) => {
 };
 
 //logout code
-
 export async function logoutUserController(req, res) {
     const { sessionId } = req.cookies;
 
@@ -108,7 +66,50 @@ export async function logoutUserController(req, res) {
     res.status(204).end();
 }
 
-//update user code
+//Verify code
+export const verifyEmailController = async (req, res) => {
+    const { verifyToken } = req.params;
+
+    const { session, userWithToken } = await verifyEmail(verifyToken);
+    // res.clearCookie('sessionId');
+    // res.clearCookie('refreshToken');
+
+    res.cookie('refreshToken', session.refreshToken, {
+        httpOnly: true,
+        expires: new Date(Date.now() + ONE_DAY),
+    });
+    res.cookie('sessionId', session._id, {
+        httpOnly: true,
+        expires: new Date(Date.now() + ONE_DAY),
+    });
+    return res.redirect(`${redirectUrl}/verify/${userWithToken.token}`);
+};
+
+//refresh session code
+export const refreshUserController = async (req, res) => {
+    const session = await refreshUser({
+        sessionId: req.cookies.sessionId,
+        refreshToken: req.cookies.refreshToken,
+    });
+
+    res.cookie('refreshToken', session.refreshToken, {
+        httpOnly: true,
+        expires: new Date(Date.now() + ONE_DAY),
+    });
+
+    res.cookie('sessionId', session._id, {
+        httpOnly: true,
+        expires: new Date(Date.now() + ONE_DAY),
+    });
+    console.log('SESION', session);
+    res.json({
+        status: 200,
+        message: 'Successfully refreshed a session!',
+        data: {
+            token: session.accessToken,
+        },
+    });
+};
 
 //reset-token code
 

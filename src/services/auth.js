@@ -41,26 +41,6 @@ export const registerUser = async userData => {
     });
 };
 
-//verify code
-
-export const verifyEmail = async verifyToken => {
-    console.log('verifyEmail', verifyToken);
-    const user = await User.findOne({ verifyToken });
-    if (!user) throw createHttpError(404, 'User not found!');
-    console.log('USER', user);
-    let session = await Sessions.findOne({ userId: user._id });
-
-    if (!session) {
-        session = await createSession(user._id);
-    }
-    console.log('SESSION IN VERIFY SERVISE', session);
-    const userWithToken = await User.findOneAndUpdate(
-        { _id: user._id, verifyToken },
-        { verifyByEmail: true, token: session.accessToken },
-        { new: true },
-    );
-    return { session, userWithToken };
-};
 // login code
 export const loginUser = async userData => {
     const user = await findUserByEmail(userData.email);
@@ -79,9 +59,28 @@ export const loginUser = async userData => {
 };
 
 //logout code
-
 export const logoutUser = sessionId => {
     return Sessions.deleteOne({ _id: sessionId });
+};
+
+//verify code
+export const verifyEmail = async verifyToken => {
+    console.log('verifyEmail', verifyToken);
+    const user = await User.findOne({ verifyToken });
+    if (!user) throw createHttpError(404, 'User not found!');
+    console.log('USER', user);
+    let session = await Sessions.findOne({ userId: user._id });
+
+    if (!session) {
+        session = await createSession(user._id);
+    }
+    console.log('SESSION IN VERIFY SERVISE', session);
+    const userWithToken = await User.findOneAndUpdate(
+        { _id: user._id, verifyToken },
+        { verifyByEmail: true, token: session.accessToken },
+        { new: true },
+    );
+    return { session, userWithToken };
 };
 
 //refresh session code
@@ -97,21 +96,15 @@ export const refreshUser = async ({ sessionId, refreshToken }) => {
     if (new Date() > new Date(session.refreshTokenValidUntil)) {
         throw createHttpError(404, 'Session token expired');
     }
-    // const updatedSession = await Sessions.findByIdAndUpdate(
-    //     sessionId,
-    //     {
-    //         accessToken: jwt.sign({ id: session.userId }, smtp.jwtSecret),
-    //         accessTokenValidUntil: new Date(Date.now() + 20000),
-    //     },
-    //     { new: true },
-    // );
     await Sessions.deleteOne({ refreshToken });
 
     const newSession = await createSession(session.userId);
     return newSession;
 };
 //update user code
-
+export const updateUser = async (id, body) => {
+    return await User.findOneAndUpdate({ _id: id }, body, { new: true });
+};
 //reset-token code
 
 //reset password code

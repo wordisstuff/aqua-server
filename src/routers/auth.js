@@ -58,8 +58,9 @@ router.post(
     ctrlWrapper(sendResetEmail),
 );
 
-// Reset password route
+//Update User
 
+// Reset password route
 router.post(
     '/reset-pwd',
     validateBody(resetPasswordSchema),

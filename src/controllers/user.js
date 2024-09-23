@@ -1,20 +1,8 @@
-// export const currentUserController = (req, res) => {
-//     const {
-//         // _id,
-//         name,
-//         email,
-//         gender,
-//         photo,
-//         weight,
-//         activeTime,
-//         recommendedWater,
-//         // verifyByEmail,
-//     } = req.user;
-//     res.status(200).json({ name,
-//         email,
-//         gender,
-//         photo,
-//         weight,
-//         activeTime,
-//         recommendedWater, });
-// };
+import { updateUser } from '../services/user.js';
+
+//update user code
+export const updateUserController = async (req, res) => {
+    const { _id } = req.user;
+    const user = await updateUser(_id, req.body);
+    console.log(user);
+};

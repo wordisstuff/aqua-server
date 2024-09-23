@@ -12,7 +12,14 @@ export const loginUserSchema = Joi.object({
 });
 
 // update User schema code
-
+export const updateUserSchema = Joi.object({
+    name: { type: String },
+    gender: { type: String, enum: ['female', 'male'], default: 'female' },
+    photo: { type: String, default: null },
+    weight: { type: Number, default: 0 },
+    activeTime: { type: Number, default: 0 },
+    recommendedWater: { type: Number, default: 1.5 },
+});
 // request reset email schema
 
 // reset password schema
@@ -29,5 +36,5 @@ export const resetPasswordSchema = Joi.object({
 
 // confirm OAuth schema
 export const confirmOAuthSchema = Joi.object({
-    code: Joi.string().required()
+    code: Joi.string().required(),
 });
