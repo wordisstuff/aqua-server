@@ -18,15 +18,13 @@ export const findWaterRecordById = async id => {
     return await WaterRecord.findById(id);
 };
 
-export const findDailyWaterRecords = async (
-    userId,
-    startOfDayDate,
-    endOfDayDate,
-) => {
-    console.log('DATESSS', startOfDayDate, '2', endOfDayDate);
+export const findDailyWaterRecords = async (userId, dateObject) => {
     return await WaterRecord.find({
         owner: userId,
-        date: { $gte: startOfDayDate, $lte: endOfDayDate },
+        date: {
+            $gte: dateObject,
+            $lte: new Date(dateObject.getTime() + (24 * 60 * 60 * 1000 - 1000)),
+        },
     });
 };
 

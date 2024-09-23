@@ -84,19 +84,10 @@ export const deleteWaterRecord = async (req, res, next) => {
 
 export const getDailyWaterRecord = async (req, res, next) => {
     const { date } = req.params;
-    console.log(date);
     const dateObject = new Date(date);
-    console.log(dateObject);
-    const startOfDayDate = startOfDay(dateObject);
-    const endOfDayDate = endOfDay(dateObject);
 
     try {
-        const records = await findDailyWaterRecords(
-            req.user._id,
-            startOfDayDate,
-            endOfDayDate,
-        );
-        console.log('records', records);
+        const records = await findDailyWaterRecords(req.user._id, dateObject);
         const totalAmountForDay = records
             .reduce((acc, record) => acc + record.amount, 0)
             .toFixed(2);
