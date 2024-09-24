@@ -50,12 +50,12 @@ export const updateWaterRecord = async (req, res, next) => {
     const updatedData = { amount, date: recordDate };
 
     try {
-        const updatedRecord = await updateWaterRecordById(id, updatedData);
-        if (!updatedRecord) throw errorHandler(404, 'Water record not found');
+        const data = await updateWaterRecordById(id, updatedData);
+        if (!data) throw errorHandler(404, 'Water record not found');
 
         res.json({
-            updatedRecord,
             message: 'Water record successfully updated',
+            data,
         });
     } catch (err) {
         next(err);
