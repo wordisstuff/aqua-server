@@ -33,6 +33,7 @@ const authenticate = async (req, res, next) => {
     if (!user) {
         next(createHttpError(401, 'Session not found!'));
     }
+    console.log(' USER AUTH', user);
     req.user = user;
     next();
 };

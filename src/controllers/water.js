@@ -11,7 +11,7 @@ import {
     getWaterRecordsByUserAndDate,
 } from '../services/water.js';
 import errorHandler from '../middlewares/errorHandler.js';
-import { format, startOfDay, endOfDay } from 'date-fns';
+import { format } from 'date-fns';
 import User from '../db/models/user.js';
 
 export const addWaterRecord = async (req, res, next) => {
@@ -27,10 +27,10 @@ export const addWaterRecord = async (req, res, next) => {
     const record = { amount, date: recordDate, owner };
 
     try {
-        const newWaterRecord = await createWaterRecord(record);
+        const data = await createWaterRecord(record);
         res.status(201).send({
-            newWaterRecord,
             message: 'Water record successfully added',
+            data,
         });
     } catch (err) {
         next(err);
@@ -72,10 +72,10 @@ export const deleteWaterRecord = async (req, res, next) => {
         if (record.owner.toString() !== req.user.id)
             return next(errorHandler(403, 'Access denied'));
 
-        const deletedRecord = await deleteWaterRecordById(id);
+        const data = await deleteWaterRecordById(id);
         res.status(200).send({
-            deletedRecord,
             message: 'Water record successfully deleted',
+            data,
         });
     } catch (err) {
         next(err);

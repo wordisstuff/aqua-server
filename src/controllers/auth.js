@@ -6,7 +6,6 @@ import {
     verifyEmail,
     refreshUser,
     loginOrRegisterWithGoogle,
-    updateUser,
 } from '../services/auth.js';
 import jwt from 'jsonwebtoken';
 import createHttpError from 'http-errors';
