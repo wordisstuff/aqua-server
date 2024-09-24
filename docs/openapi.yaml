@@ -26,12 +26,18 @@ paths:
     /auth/logout:
         post:
             $ref: ../swagger/paths/auth/logout.yaml
-    /users/update:
-        patch:
-            $ref: ../swagger/paths/user/patch.yaml
+    /auth/request-reset-password:
+        post:
+            $ref: ../swagger/paths/auth/request-reset.yaml
+    /auth/reset-password:
+        post:
+            $ref: ../swagger/paths/auth/reset-password.yaml
     /users/profile:
         get:
             $ref: ../swagger/paths/user/get.yaml
+    /users/update:
+        patch:
+            $ref: ../swagger/paths/user/patch.yaml
     /users/happy:
         get:
             $ref: ../swagger/paths/user/getHappy.yaml

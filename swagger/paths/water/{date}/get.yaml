@@ -1,5 +1,5 @@
 tags:
-    - WaterRecord
+    - Water info
 summary: Get daily water record
 operationId: getDailyWaterRecord
 description: 'Retrieve the total water consumption for a specific day.'

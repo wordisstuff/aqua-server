@@ -1,0 +1,13 @@
+type: object
+required:
+    - email
+    - password
+properties:
+    email:
+        description: "User's email"
+        type: string
+        example: test@hmail.com
+    password:
+        description: "User's password"
+        type: string
+        example: pas1234

@@ -1,5 +1,5 @@
 tags:
-    - WaterRecord
+    - Water info
 summary: Update water amount
 operationId: updateWaterRecord
 description: 'Update an existing water record.'
