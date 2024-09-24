@@ -14,10 +14,9 @@ export const loginUserSchema = Joi.object({
 // update User schema code
 export const updateUserSchema = Joi.object({
     name: { type: String },
-    gender: { type: String, enum: ['female', 'male'], default: 'female' },
-    photo: { type: String, default: null },
-    weight: { type: Number, default: 0 },
-    activeTime: { type: Number, default: 0 },
+    gender: { type: String, valid: ['female', 'male'], default: 'female' },
+    weight: { type: Number, default: '' },
+    activeTime: { type: Number, default: '' },
     recommendedWater: { type: Number, default: 1.5 },
 });
 // request reset email schema
