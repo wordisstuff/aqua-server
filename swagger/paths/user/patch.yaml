@@ -18,10 +18,10 @@ responses:
                             example: 60d0fe4f5311236168a109ca
                         name:
                             type: string
-                            example: John Doe
+                            example: John Smith
                         email:
                             type: string
-                            example: user@example.com
+                            example: johnsmith@gmail.com
                         avatar:
                             type: string
                             example: https://res.cloudinary.com/dntbkzhtq/image/upload/v1719141998/AquaTrack/defaultAvatar.webp

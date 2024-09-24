@@ -1,0 +1,51 @@
+type: object
+required:
+    - email
+    - _id
+    - createdAt
+    - updatedAt
+    - photo
+    - name
+    - gender
+    - weight
+    - activeTime
+    - dailyWaterIntake
+properties:
+    name:
+        description: "User's name. Empty by default. Change it by patch method"
+        type: string
+    avatar:
+        description: "User's avatar. Empty by default. Change it by patch method"
+        type: string
+    gender:
+        description: "User's gender. Empty by default. Change it by patch method"
+        type: string
+    dailyWaterIntake:
+        description: "User's daily norm of water. 2000 ml by default. Change it by patch method"
+        type: number
+    email:
+        description: "User's email"
+        type: string
+        example: johnsmith@gmail.com
+    _id:
+        description: "User's id"
+        type: string
+        example: 66b750163beb29c60d215f8c
+    weight:
+        description: 'User weight'
+        type: number
+        example: 80
+    activeTime:
+        description: 'User time of active participation in sports'
+        type: number
+        example: 2.5
+    createdAt:
+        description: 'When a user has been created at'
+        type: string
+        format: date-time
+        example: 2024-08-10T11:33:42.181Z
+    updatedAt:
+        description: 'When a user has been updated at'
+        type: string
+        format: date-time
+        example: 2024-08-10T11:33:42.181Z

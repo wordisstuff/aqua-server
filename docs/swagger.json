@@ -267,6 +267,206 @@
         }
       }
     },
+    "/auth/request-reset-password": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Request reset password",
+        "operationId": "requestResetPassword",
+        "description": "Reset password request",
+        "security": [
+          {}
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "description": "User's email",
+                    "type": "string",
+                    "example": "johnsmith@gmail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Reset password email was successfully sent!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Reset password email was successfully sent!"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Reset a password",
+        "operationId": "resetPassword",
+        "description": "Reset the password",
+        "security": [
+          {}
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "token",
+                  "password"
+                ],
+                "properties": {
+                  "password": {
+                    "description": "User's new password",
+                    "type": "string",
+                    "example": "newPassword"
+                  },
+                  "token": {
+                    "description": "Token from email to reset the password",
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjM0NSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY4NjkzNTczNiwiZXhwIjoxNjg2OTM5MzM2fQ.WxL6mWQlDrqX5L4s57UyYkqPLJOhLgGD0rf1RqaUVds"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password was successfully reset!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Password successfully changed!"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    },
+    "/users/profile": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get information about the user",
+        "operationId": "getUserInfo",
+        "description": "Get information about user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully found a user!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully found a user!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/user"
+                        }
+                      ],
+                      "required": [
+                        "email",
+                        "createdAt",
+                        "updatedAt"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
     "/users/update": {
       "patch": {
         "tags": [
@@ -294,78 +494,11 @@
                     },
                     "name": {
                       "type": "string",
-                      "example": "John Doe"
+                      "example": "John Smith"
                     },
                     "email": {
                       "type": "string",
-                      "example": "user@example.com"
-                    },
-                    "avatar": {
-                      "type": "string",
-                      "example": "https://res.cloudinary.com/dntbkzhtq/image/upload/v1719141998/AquaTrack/defaultAvatar.webp"
-                    },
-                    "gender": {
-                      "type": "string",
-                      "example": "woman"
-                    },
-                    "weight": {
-                      "type": "number",
-                      "example": 0
-                    },
-                    "dailyActivityTime": {
-                      "type": "number",
-                      "example": 0
-                    },
-                    "dailyWaterNorm": {
-                      "type": "number",
-                      "example": 1.5
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      }
-    },
-    "/users/profile": {
-      "get": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Get user profile",
-        "operationId": "get",
-        "description": "Retrieve the authenticated user profile.",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "User profile data retrieved",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "_id": {
-                      "type": "string",
-                      "example": "60d0fe4f5311236168a109ca"
-                    },
-                    "name": {
-                      "type": "string",
-                      "example": "John Doe"
-                    },
-                    "email": {
-                      "type": "string",
-                      "example": "user@example.com"
+                      "example": "johnsmith@gmail.com"
                     },
                     "avatar": {
                       "type": "string",
@@ -447,7 +580,7 @@
     "/water": {
       "post": {
         "tags": [
-          "WaterRecord"
+          "Water info"
         ],
         "summary": "Add water record",
         "operationId": "addWaterRecord",
@@ -539,7 +672,7 @@
     "/water/{id}": {
       "patch": {
         "tags": [
-          "WaterRecord"
+          "Water info"
         ],
         "summary": "Update water amount",
         "operationId": "updateWaterRecord",
@@ -643,7 +776,7 @@
       },
       "delete": {
         "tags": [
-          "WaterRecord"
+          "Water info"
         ],
         "summary": "Delete water record",
         "operationId": "deleteWaterRecord",
@@ -728,7 +861,7 @@
     "/water/daily/{date}": {
       "get": {
         "tags": [
-          "WaterRecord"
+          "Water info"
         ],
         "summary": "Get daily water record",
         "operationId": "getDailyWaterRecord",
@@ -807,7 +940,7 @@
     "/water/monthly/{year}/{month}": {
       "get": {
         "tags": [
-          "WaterRecord"
+          "Water info"
         ],
         "summary": "Get monthly water record",
         "operationId": "getMonthlyWaterRecord",
@@ -1021,6 +1154,73 @@
                 "example": "Internal server error."
               }
             }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "user": {
+        "type": "object",
+        "required": [
+          "email",
+          "_id",
+          "createdAt",
+          "updatedAt",
+          "photo",
+          "name",
+          "gender",
+          "weight",
+          "activeTime",
+          "dailyWaterIntake"
+        ],
+        "properties": {
+          "name": {
+            "description": "User's name. Empty by default. Change it by patch method",
+            "type": "string"
+          },
+          "avatar": {
+            "description": "User's avatar. Empty by default. Change it by patch method",
+            "type": "string"
+          },
+          "gender": {
+            "description": "User's gender. Empty by default. Change it by patch method",
+            "type": "string"
+          },
+          "dailyWaterIntake": {
+            "description": "User's daily norm of water. 2000 ml by default. Change it by patch method",
+            "type": "number"
+          },
+          "email": {
+            "description": "User's email",
+            "type": "string",
+            "example": "johnsmith@gmail.com"
+          },
+          "_id": {
+            "description": "User's id",
+            "type": "string",
+            "example": "66b750163beb29c60d215f8c"
+          },
+          "weight": {
+            "description": "User weight",
+            "type": "number",
+            "example": 80
+          },
+          "activeTime": {
+            "description": "User time of active participation in sports",
+            "type": "number",
+            "example": 2.5
+          },
+          "createdAt": {
+            "description": "When a user has been created at",
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-08-10T11:33:42.181Z"
+          },
+          "updatedAt": {
+            "description": "When a user has been updated at",
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-08-10T11:33:42.181Z"
           }
         }
       }

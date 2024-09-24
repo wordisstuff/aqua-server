@@ -1,5 +1,5 @@
 tags:
-    - WaterRecord
+    - Water info
 summary: Delete water record
 operationId: deleteWaterRecord
 description: 'Delete an existing water record by ID.'
