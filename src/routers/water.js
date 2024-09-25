@@ -47,7 +47,7 @@ waterRouter.get(
     ctrlWrapper(getDailyWaterRecord),
 );
 waterRouter.get(
-    '/:id/monthly/:year/:month',
+    '/monthly/:year/:month',
     jsonParser,
     ctrlWrapper(getMonthlyWaterRecord),
 );
