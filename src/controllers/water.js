@@ -106,13 +106,10 @@ export const getDailyWaterRecord = async (req, res, next) => {
 };
 
 export const getMonthlyWaterRecord = async (req, res, next) => {
-    const { id, year, month } = req.params;
-    const userId = id;
+    const { year, month } = req.params;
+    const { _id, recommendedWater } = req.user;
 
     try {
-        const user = await findUserById(userId);
-        if (!user) return next(errorHandler(404, 'User not found'));
-
         const userTimezone = req.headers['timezone'] || 'UTC';
         const startOfMonth = moment
             .tz({ year, month: month - 1, day: 1 }, userTimezone)
@@ -123,7 +120,7 @@ export const getMonthlyWaterRecord = async (req, res, next) => {
             .endOf('day');
 
         const waterRecords = await findMonthlyWaterRecords(
-            userId,
+            _id,
             startOfMonth.toDate(),
             endOfMonth.toDate(),
         );
@@ -145,7 +142,7 @@ export const getMonthlyWaterRecord = async (req, res, next) => {
                     .format('YYYY-MM-DD');
                 const totalAmount = groupedByDay[formattedDate] || 0;
                 const percentComplete = (
-                    (totalAmount / user.dailyWaterNorm) *
+                    (totalAmount / recommendedWater) *
                     100
                 ).toFixed(2);
                 return {
@@ -160,7 +157,7 @@ export const getMonthlyWaterRecord = async (req, res, next) => {
             .reduce((sum, record) => sum + record.amount, 0)
             .toFixed(2);
 
-        res.status(200).send({ totalWaterForMonth, daysInMonth });
+        res.status(200).json({ totalWaterForMonth, daysInMonth });
     } catch (err) {
         next(err);
     }
