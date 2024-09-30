@@ -13,11 +13,13 @@ export const loginUserSchema = Joi.object({
 
 // update User schema code
 export const updateUserSchema = Joi.object({
-    name: { type: String },
-    gender: { type: String, valid: ['female', 'male'], default: 'female' },
-    weight: { type: Number, default: '' },
-    activeTime: { type: Number, default: '' },
-    recommendedWater: { type: Number, default: 1.5 },
+    name: Joi.string().min(2).max(12),
+    email: Joi.string().email(),
+    photo: Joi.string(),
+    gender: Joi.string().valid('female', 'male').default('female'),
+    weight: Joi.number().min(30).max(300).default(''),
+    activeTime: Joi.number().default(''),
+    recommendedWater: Joi.number().default(1.5),
 });
 // request reset email schema
 
