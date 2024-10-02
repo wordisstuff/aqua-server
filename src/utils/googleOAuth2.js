@@ -1,18 +1,23 @@
-// import * as fs from 'node:fs';
-// import path from 'node:path';
+import * as fs from 'node:fs';
+import path from 'node:path';
 import createHttpError from 'http-errors';
 
 import { OAuth2Client } from 'google-auth-library';
 // import { JSON_PATH } from '../constants/constants.js';
-import { OAuth, redirectUrl } from '../constants/index.js';
+import { OAuth } from '../constants/index.js';
 // const CONFIG = JSON.parse(
 //     fs.readFileSync(path.resolve(JSON_PATH), { encoding: 'utf-8' }),
 // );
+const CONFIG = JSON.parse(
+    fs.readFileSync(path.resolve('src', 'google-oauth.json'), {
+        encoding: 'utf-8',
+    }),
+);
 
 const googleOAuth2Client = new OAuth2Client({
     clientId: OAuth.clientId,
     clientSecret: OAuth.clientSecret,
-    redirectUrl: redirectUrl,
+    redirectUri: CONFIG['web']['redirect_uris'][0],
 });
 
 export function generateAuthUrl() {
