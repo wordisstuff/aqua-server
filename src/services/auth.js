@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import crypto from 'node:crypto';
 import createHttpError from 'http-errors';
 import User from '../db/models/user.js';
 import createSession from '../utils/createSession.js';
