@@ -241,6 +241,7 @@ transporter.sendMail(
 
 export async function getOAuthUrlController(req, res) {
     const url = generateAuthUrl();
+    console.log(url);
     res.send({
         status: 200,
         message: 'Succesfully get Google OAuth',
@@ -250,7 +251,8 @@ export async function getOAuthUrlController(req, res) {
 
 export async function confirmOAuthController(req, res) {
     const { code } = req.body;
-    const session = await loginOrRegisterWithGoogle(code);
+    console.log(code);
+    const session = await loginOrRegisterWithGoogle(code.code);
 
     res.cookie('refreshToken', session.refreshToken, {
         httpOnly: true,

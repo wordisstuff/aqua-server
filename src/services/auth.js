@@ -164,6 +164,7 @@ export async function loginOrRegisterWithGoogle(code) {
         throw createHttpError(401, 'Unauthorized');
     }
     const user = await User.findOne({ email: payload.email });
+    console.log(user);
     const password = await bcrypt.hash(
         crypto.randomBytes(30).toString('base64'),
         10,

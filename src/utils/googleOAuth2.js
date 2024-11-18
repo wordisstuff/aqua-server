@@ -1,19 +1,17 @@
-// import * as fs from 'node:fs';
-// import path from 'node:path';
+// import { readFile } from 'node:fs/promises';
 import createHttpError from 'http-errors';
-
 import { OAuth2Client } from 'google-auth-library';
-// import { JSON_PATH } from '../constants/constants.js';
 import { OAuth, redirectUrl } from '../constants/index.js';
-// const CONFIG = JSON.parse(
-//     fs.readFileSync(path.resolve(JSON_PATH), { encoding: 'utf-8' }),
-// );
+
+// const oauthConfig = JSON.parse(await readFile(OAuth.jsonPath));
 
 const googleOAuth2Client = new OAuth2Client({
     clientId: OAuth.clientId,
     clientSecret: OAuth.clientSecret,
-    redirectUrl: redirectUrl,
+    redirectUri: redirectUrl,
 });
+console.log(OAuth);
+console.log(redirectUrl);
 
 export function generateAuthUrl() {
     return googleOAuth2Client.generateAuthUrl({
@@ -27,6 +25,7 @@ export function generateAuthUrl() {
 export async function validateCode(code) {
     try {
         const response = await googleOAuth2Client.getToken(code);
+        console.log(response);
         return googleOAuth2Client.verifyIdToken({
             idToken: response.tokens.id_token,
         });

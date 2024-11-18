@@ -67,12 +67,12 @@ router.post(
     ctrlWrapper(resetPassword),
 );
 
-router.get('/google-redirect', ctrlWrapper(getOAuthUrlController));
+router.get('/get-oauth', ctrlWrapper(getOAuthUrlController));
 
 router.post(
     '/google',
     jsonParser,
-    validateBody(confirmOAuthSchema),
+    // validateBody(confirmOAuthSchema),
     ctrlWrapper(confirmOAuthController),
 );
 
