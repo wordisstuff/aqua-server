@@ -8,7 +8,7 @@ import { OAuth, redirectUrl } from '../constants/index.js';
 const googleOAuth2Client = new OAuth2Client({
     clientId: OAuth.clientId,
     clientSecret: OAuth.clientSecret,
-    redirectUri: redirectUrl,
+    redirectUri: `${redirectUrl}/auth/google`,
 });
 console.log(OAuth);
 console.log(redirectUrl);
@@ -23,13 +23,16 @@ export function generateAuthUrl() {
 }
 
 export async function validateCode(code) {
+    console.log('CODE', code);
     try {
         const response = await googleOAuth2Client.getToken(code);
-        console.log(response);
+        console.log('RESPONS ', response);
         return googleOAuth2Client.verifyIdToken({
             idToken: response.tokens.id_token,
+            audience: OAuth.clientId,
         });
     } catch (error) {
+        console.log('ERROR validateCode', error);
         if (
             error.response &&
             error.response.status >= 400 &&

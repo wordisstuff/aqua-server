@@ -158,8 +158,10 @@ export const resetPasswordService = async (token, newPassword) => {
 };
 
 export async function loginOrRegisterWithGoogle(code) {
+    console.log('loginOrRegisterWithGoogle', code);
     const ticket = await validateCode(code);
     const payload = ticket.getPayload();
+    console.log(payload);
     if (typeof payload === 'undefined') {
         throw createHttpError(401, 'Unauthorized');
     }

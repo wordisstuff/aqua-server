@@ -70,8 +70,6 @@ export const verifyEmailController = async (req, res) => {
     const { verifyToken } = req.params;
 
     const { session, userWithToken } = await verifyEmail(verifyToken);
-    // res.clearCookie('sessionId');
-    // res.clearCookie('refreshToken');
 
     res.cookie('refreshToken', session.refreshToken, {
         httpOnly: true,
@@ -251,25 +249,24 @@ export async function getOAuthUrlController(req, res) {
 
 export async function confirmOAuthController(req, res) {
     const { code } = req.body;
-    console.log(code);
-    const session = await loginOrRegisterWithGoogle(code.code);
+    console.log('confirmOAuthController', code);
+    const session = await loginOrRegisterWithGoogle(code);
+    console.log('confirmOAuthController', session);
 
-    res.cookie('refreshToken', session.refreshToken, {
-        httpOnly: true,
-        expires: session.refreshTokenValidUntil,
-    });
+    // res.cookie('refreshToken', session.refreshToken, {
+    //     httpOnly: true,
+    //     expires: session.refreshTokenValidUntil,
+    // });
 
-    res.cookie('sessionId', session._id, {
-        httpOnly: true,
-        expires: session.refreshTokenValidUntil,
-    });
+    // res.cookie('sessionId', session._id, {
+    //     httpOnly: true,
+    //     expires: session.refreshTokenValidUntil,
+    // });
 
     res.status(200).json({
         status: 200,
         message: 'login with Google completed',
-        data: {
-            token: session.accessToken,
-        },
+        data: session,
     });
 }
 
