@@ -251,17 +251,17 @@ export async function confirmOAuthController(req, res) {
     const { code } = req.body;
     console.log('confirmOAuthController', code);
     const session = await loginOrRegisterWithGoogle(code);
-    console.log('confirmOAuthController', session);
+    console.log('confirmOAuthController session', session);
 
-    // res.cookie('refreshToken', session.refreshToken, {
-    //     httpOnly: true,
-    //     expires: session.refreshTokenValidUntil,
-    // });
+    res.cookie('refreshToken', session.refreshToken, {
+        httpOnly: true,
+        expires: session.refreshTokenValidUntil,
+    });
 
-    // res.cookie('sessionId', session._id, {
-    //     httpOnly: true,
-    //     expires: session.refreshTokenValidUntil,
-    // });
+    res.cookie('sessionId', session._id, {
+        httpOnly: true,
+        expires: session.refreshTokenValidUntil,
+    });
 
     res.status(200).json({
         status: 200,

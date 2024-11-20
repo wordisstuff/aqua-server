@@ -10,6 +10,7 @@ import { v4 } from 'uuid';
 import Sessions from '../db/models/session.js';
 import gravatar from 'gravatar';
 import { validateCode } from '../utils/googleOAuth2.js';
+import randomToken from '../utils/randomToken.js';
 
 export const findUserByEmail = email => User.findOne({ email });
 export const findUserById = id => User.findById(id);
@@ -160,29 +161,29 @@ export const resetPasswordService = async (token, newPassword) => {
 export async function loginOrRegisterWithGoogle(code) {
     console.log('loginOrRegisterWithGoogle', code);
     const ticket = await validateCode(code);
-    const payload = ticket.getPayload();
-    console.log(payload);
-    if (typeof payload === 'undefined') {
-        throw createHttpError(401, 'Unauthorized');
+    console.log('TIKET', ticket.payload);
+    if (typeof ticket.payload === 'undefined') {
+        throw createHttpError(401, 'Unauthorized ticket ');
     }
-    const user = await User.findOne({ email: payload.email });
-    console.log(user);
-    const password = await bcrypt.hash(
-        crypto.randomBytes(30).toString('base64'),
-        10,
-    );
 
-    if (user === null) {
-        const createdUser = await User.create({
-            email: payload.email,
-            name: payload.name,
-            password,
-        });
+    console.log(ticket.payload.email);
+    const user = await User.findOne({ email: ticket.payload.email });
 
-        let newUserSession = await createSession(createdUser._id);
-        return newUserSession;
+    console.log('CHECK USER', user);
+    if (user !== null) {
+        throw createHttpError(400, 'User alredy created');
     }
-    await Sessions.deleteOne({ _id: user._id });
-    let session = await createSession(user._id);
-    return session;
+    const password = await bcrypt.hash(randomToken(30, 'base64'), 10);
+    console.log('password', password);
+
+    const newUser = await User.create({
+        email: ticket.payload.email,
+        name: ticket.payload.name,
+        photo: ticket.payload.picture,
+        verifyByEmail: ticket.payload.email_verified,
+        password,
+    });
+    console.log('NEW USER', newUser);
+
+    return await createSession(newUser._id);
 }

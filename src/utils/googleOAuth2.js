@@ -22,25 +22,32 @@ export function generateAuthUrl() {
     });
 }
 
-export async function validateCode(code) {
-    console.log('CODE', code);
-    try {
-        const response = await googleOAuth2Client.getToken(code);
-        console.log('RESPONS ', response);
-        return googleOAuth2Client.verifyIdToken({
-            idToken: response.tokens.id_token,
-            audience: OAuth.clientId,
-        });
-    } catch (error) {
-        console.log('ERROR validateCode', error);
-        if (
-            error.response &&
-            error.response.status >= 400 &&
-            error.response.status <= 499
-        ) {
-            throw createHttpError(401, 'Unauthorized');
-        } else {
-            throw error;
-        }
-    }
-}
+export const validateCode = async code => {
+    const res = await googleOAuth2Client.getToken(code);
+    if (!res.tokens.id_token) throw createHttpError(401, 'Unauthorized');
+    return await googleOAuth2Client.verifyIdToken({
+        idToken: res.tokens.id_token,
+    });
+};
+// export async function validateCode(code) {
+//     console.log('CODE', code);
+//     try {
+//         const response = await googleOAuth2Client.getToken(code);
+//         console.log('RESPONS ', response);
+//         return googleOAuth2Client.verifyIdToken({
+//             idToken: response.tokens.id_token,
+//             // audience: OAuth.clientId,
+//         });
+//     } catch (error) {
+//         console.log('ERROR validateCode', error);
+//         if (
+//             error.response &&
+//             error.response.status >= 400 &&
+//             error.response.status <= 499
+//         ) {
+//             throw createHttpError(401, 'Unauthorized validation');
+//         } else {
+//             throw error;
+//         }
+//     }
+// }
