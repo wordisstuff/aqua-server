@@ -171,7 +171,8 @@ export async function loginOrRegisterWithGoogle(code) {
 
     console.log('CHECK USER', user);
     if (user !== null) {
-        throw createHttpError(400, 'User alredy created');
+        await Sessions.deleteOne({ userId: user._id });
+        return await createSession(user._id);
     }
     const password = await bcrypt.hash(randomToken(30, 'base64'), 10);
     console.log('password', password);

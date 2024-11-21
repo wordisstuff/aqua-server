@@ -108,13 +108,6 @@ export const refreshUserController = async (req, res) => {
     });
 };
 
-//reset-token code
-
-//reset password code
-
-//google auth code
-
-//confirm google auth code
 export const resetPassword = async (req, res, next) => {
     try {
         const { token, password } = req.body;
@@ -262,11 +255,13 @@ export async function confirmOAuthController(req, res) {
         httpOnly: true,
         expires: session.refreshTokenValidUntil,
     });
-
+    console.log('session.accessToken', session.accessToken);
     res.status(200).json({
         status: 200,
         message: 'login with Google completed',
-        data: session,
+        data: {
+            token: session.accessToken,
+        },
     });
 }
 
