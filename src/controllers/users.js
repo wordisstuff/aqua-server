@@ -2,7 +2,7 @@ import { getUsers } from "../services/users";
 
 
 export const GetUsersController = async (req, res) => {
-   const users = getUsers();
+   const users = await getUsers();
 //    const usersAvatarsArr = users.map(i=>{
     
 //    })
