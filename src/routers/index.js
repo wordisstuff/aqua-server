@@ -10,5 +10,6 @@ const router = Router();
 router.use('/auth', authRouter);
 router.use('/user', authenticate, userRouter);
 router.use('/water', authenticate, jsonParser, waterRouter);
+router.use('/users',jsonParser,)
 
 export default router;
