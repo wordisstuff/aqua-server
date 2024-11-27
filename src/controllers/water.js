@@ -6,7 +6,6 @@ import {
     findWaterRecordById,
     findDailyWaterRecords,
     findMonthlyWaterRecords,
-    findUserById,
     getWaterRecordById,
     getWaterRecordsByUserAndDate,
 } from '../services/water.js';

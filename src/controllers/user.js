@@ -19,7 +19,6 @@ export const updateUserController = async (req, res) => {
     const updatedUser = { ...req.body, photo: photoUrl };
 
     const user = await updateUser(_id, updatedUser);
-    console.log(user);
     res.status(200).json({
         message: `User with email ${user.email} was updated!!!`,
         user: serializeUser(user),

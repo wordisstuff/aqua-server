@@ -27,8 +27,6 @@ export const registerUserController = async (req, res) => {
 
 //login code
 export const loginUserController = async (req, res) => {
-    console.log(req.body);
-
     const { user, session } = await loginUser(req.body);
 
     res.cookie('refreshToken', session.refreshToken, {
@@ -162,19 +160,15 @@ export const sendResetEmail = async (req, res, next) => {
         }
 
         // Перевірка, чи існує користувач з таким email
-        console.log('Searching for user with email:', email);
         const user = await User.findOne({ email });
         if (!user) {
             throw createHttpError(404, 'User not found!');
         }
-        console.log('User found:', user);
 
         // Генерація JWT токену для скидання пароля
-        console.log('Генерація токену для:', user.email);
         const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
             expiresIn: '5m',
         });
-        console.log('Токен згенеровано:', token);
 
         // Створення посилання для скидання пароля
         const resetLink = `${redirectUrl}/forgotPassword?token=${token}`;
@@ -232,7 +226,6 @@ transporter.sendMail(
 
 export async function getOAuthUrlController(req, res) {
     const url = generateAuthUrl();
-    console.log(url);
     res.send({
         status: 200,
         message: 'Succesfully get Google OAuth',
@@ -242,9 +235,7 @@ export async function getOAuthUrlController(req, res) {
 
 export async function confirmOAuthController(req, res) {
     const { code } = req.body;
-    console.log('confirmOAuthController', code);
     const session = await loginOrRegisterWithGoogle(code);
-    console.log('confirmOAuthController session', session);
 
     res.cookie('refreshToken', session.refreshToken, {
         httpOnly: true,
@@ -255,7 +246,6 @@ export async function confirmOAuthController(req, res) {
         httpOnly: true,
         expires: session.refreshTokenValidUntil,
     });
-    console.log('session.accessToken', session.accessToken);
     res.status(200).json({
         status: 200,
         message: 'login with Google completed',

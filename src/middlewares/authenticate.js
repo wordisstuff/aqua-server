@@ -4,8 +4,6 @@ import Sessions from '../db/models/session.js';
 
 const authenticate = async (req, res, next) => {
     const { authorization } = req.headers;
-    console.log('TOKEN BEARER', authorization);
-    console.log(req.body);
     if (!authorization) {
         return next(
             createHttpError(401, 'Please provide Authorization header'),
@@ -34,7 +32,6 @@ const authenticate = async (req, res, next) => {
     if (!user) {
         next(createHttpError(401, 'Session not found!'));
     }
-    console.log(' USER AUTH', user);
     req.user = user;
     next();
 };
