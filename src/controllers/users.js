@@ -1,7 +1,7 @@
 import { getUsers } from "../services/users";
 
 
-export const updateUserController = async (req, res) => {
+export const GetUsersController = async (req, res) => {
    const users = getUsers();
 //    const usersAvatarsArr = users.map(i=>{
     
