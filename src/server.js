@@ -16,7 +16,8 @@ export const setupServer = () => {
     const app = express();
 
     app.use(pino(pinoSettings));
-    app.use(cors({ origin: `${redirectUrl}`, credentials: true }));
+    // app.use(cors({ origin: `${redirectUrl}`, credentials: true }));
+    app.use(cors({ origin: 'https://aqua-front-nine.vercel.app', credentials: true }));
     app.use(cookieParser());
     app.use(express.json());
     app.use('/api-docs', swaggerDocs());
